@@ -1,5 +1,6 @@
-﻿
-using Project.Data.Entities.Users;
+﻿using Project.Data.Entities.Users;
+using Project.Data.Entities.People;
+using Project.Data.Entities.Curriculum;
 
 namespace Project.Core.Features.Authentication.Command.Handlers
 {
@@ -57,8 +58,10 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                 if (existingUser is not null)
                     return BadRequest<string>("An account with this email already exists.");
 
-                // Create a new user
+                // Create a new user and mark email confirmed so no confirmation required
                 var newUser = _mapper.Map<ApplicationUser>(request);
+                newUser.EmailConfirmed = true; // skip email confirmation
+
                 var result = await _userManager.CreateAsync(newUser, request.Password);
                 if (!result.Succeeded)
                 {
@@ -66,23 +69,83 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                     return BadRequest<string>(errors);
                 }
 
-                // Generate confirmation token
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                // assign role
+                var role = request.Role ?? "Student";
+                var roleResult = await _userManager.AddToRoleAsync(newUser, role);
+                if (!roleResult.Succeeded)
+                {
+                    await transaction.RollbackAsync();
+                    return BadRequest<string>("Failed to assign role to user.");
+                }
 
-                // Send confirmation email
-                await SendConfirmationEmail(newUser, code);
+                // create profile based on role
+                switch (role.ToLowerInvariant())
+                {
+                    case "student":
+                        var student = new Student
+                        {
+                            ApplicationUserId = newUser.Id,
+                            GradeYear = request.GradeYear ?? 0,
+                            ParentPhoneNumber = request.ParentPhoneNumber ?? string.Empty
+                        };
+                        await _unitOfWork.Students.AddAsync(student, cancellationToken);
+                        break;
+                    case "teacher":
+                        if (!request.SubjectId.HasValue)
+                        {
+                            await transaction.RollbackAsync();
+                            return BadRequest<string>("SubjectId is required for teacher role.");
+                        }
+                        var teacher = new Teacher
+                        {
+                            ApplicationUserId = newUser.Id,
+                            SubjectId = request.SubjectId.Value
+                        };
+                        await _unitOfWork.Teachers.AddAsync(teacher, cancellationToken);
+                        break;
+                    case "parent":
+                        var parent = new Parent
+                        {
+                            ApplicationUserId = newUser.Id,
+                            NationalId = request.NationalId ?? string.Empty
+                        };
+                        await _unitOfWork.Parents.AddAsync(parent, cancellationToken);
+                        break;
+                    case "assistant":
+                        if (!request.TeacherId.HasValue)
+                        {
+                            await transaction.RollbackAsync();
+                            return BadRequest<string>("TeacherId is required for assistant role.");
+                        }
+                        var assistant = new Assistant
+                        {
+                            ApplicationUserId = newUser.Id,
+                            TeacherId = request.TeacherId.Value
+                        };
+                        await _unitOfWork.Assistants.AddAsync(assistant, cancellationToken);
+                        break;
+                    default:
+                        break;
+                }
 
-                // Commit the transaction
+                // persist changes
+                await _unitOfWork.CompeleteAsync();
                 await transaction.CommitAsync();
 
-                return Success("Account created successfully. Please check your email to confirm your account.", "User created successfully");
+                // generate token so user is logged in immediately
+                var tokenResult = await _authService.GetTokenAsync(request.Email, request.Password, cancellationToken);
+                if (!string.IsNullOrEmpty(tokenResult.ErrorMessage))
+                {
+                    // user created but token generation failed
+                    return Success<string>("", "Account created but automatic login failed: " + tokenResult.ErrorMessage);
+                }
+
+                // return token value to client
+                return Success<string>(tokenResult.Response!.Token, "Account created and logged in successfully");
             }
             catch (Exception ex)
             {
-                // Rollback the transaction in case of any failure
                 await transaction.RollbackAsync();
-                // Log the exception if needed (not shown here)
                 return BadRequest<string>(ex.Message.ToString());
             }
         }
@@ -151,6 +214,21 @@ namespace Project.Core.Features.Authentication.Command.Handlers
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

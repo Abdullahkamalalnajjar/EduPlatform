@@ -16,7 +16,7 @@ public static class SwaggerExtension
     {
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Project.Apis", Version = "V1" });
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Edu Platform.Apis", Version = "V1" });
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 In = ParameterLocation.Header,

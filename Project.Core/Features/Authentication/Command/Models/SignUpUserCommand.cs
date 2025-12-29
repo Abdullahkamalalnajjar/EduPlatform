@@ -7,6 +7,18 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
 
+        // Role selection
+        public string Role { get; set; } = "Student"; // Student/Teacher/Parent/Assistant
+
+        // Role specific
+        public int? GradeYear { get; set; } // student
+        public string? ParentPhoneNumber { get; set; } // student
+
+        public int? SubjectId { get; set; } // teacher
+
+        public string? NationalId { get; set; } // parent
+
+        public int? TeacherId { get; set; } // assistant
     }
 
 }

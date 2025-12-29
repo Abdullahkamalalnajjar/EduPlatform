@@ -923,7 +923,7 @@ namespace Project.EF.Migrations
                     b.HasOne("Project.Data.Entities.Users.ApplicationUser", "User")
                         .WithOne("ParentProfile")
                         .HasForeignKey("Project.Data.Entities.People.Parent", "ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -934,7 +934,7 @@ namespace Project.EF.Migrations
                     b.HasOne("Project.Data.Entities.Users.ApplicationUser", "User")
                         .WithOne("StudentProfile")
                         .HasForeignKey("Project.Data.Entities.People.Student", "ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Project.Data.Entities.People.Parent", "Parent")

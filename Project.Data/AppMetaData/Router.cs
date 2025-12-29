@@ -14,70 +14,8 @@
             public const string GoogleSignIn = Prefix + "GoogleSignIn";
             public const string GoogleLoginCallback = Prefix + "GoogleLoginCallback";
         }
-        public static class DepartmentRouting
-        {
-            private const string Prefix = Rule + "/" + "Department/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
-        }
-
-        public static class PatientRouting
-        {
-            private const string Prefix = Rule + "/" + "Patient/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
-        }
-
-        public static class StoreRouting
-        {
-            private const string Prefix = Rule + "/" + "Store/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
-        }
-
-        public static class StoreItemRouting
-        {
-            private const string Prefix = Rule + "/" + "StoreItem/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
-        }
-        public static class ConsumedItemRouting
-        {
-            private const string Prefix = Rule + "/" + "ConsumedItem/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
-        }
-        public static class OrderRouting
-        {
-            private const string Prefix = Rule + "/" + "Order/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
-            public const string GetOrdersForUser = Prefix + "GetOrdersForUser";
-        }
+    
+ 
         public static class PaymentRouting
         {
             private const string Prefix = Rule + "/" + "Payment/";
@@ -115,6 +53,91 @@
             public const string Delete = Prefix + "Delete/{id}";
             public const string Paginated = Prefix + "Paginated";
         }
+
+        // Subjects routing
+        public static class SubjectRouting
+        {
+            private const string Prefix = Rule + "/" + "Subject/";
+            public const string List = Prefix + ListRoute;
+            public const string GetById = Prefix + SingleRoute;
+            public const string Create = Prefix + "Create";
+            public const string Edit = Prefix + "Edit";
+            public const string Delete = Prefix + "Delete/{id}";
+            public const string Paginated = Prefix + "Paginated";
+        }
+
+        // Students routing
+        public static class StudentRouting
+        {
+            private const string Prefix = Rule + "/" + "Student/";
+            public const string List = Prefix + ListRoute;
+            public const string GetById = Prefix + SingleRoute;
+            public const string Create = Prefix + "Create";
+            public const string Edit = Prefix + "Edit";
+            public const string Delete = Prefix + "Delete/{id}";
+            public const string Paginated = Prefix + "Paginated";
+        }
+
+        // Teachers routing
+        public static class TeacherRouting
+        {
+            private const string Prefix = Rule + "/" + "Teacher/";
+            public const string List = Prefix + ListRoute;
+            public const string GetById = Prefix + SingleRoute;
+            public const string Create = Prefix + "Create";
+            public const string Edit = Prefix + "Edit";
+            public const string Delete = Prefix + "Delete/{id}";
+            public const string Paginated = Prefix + "Paginated";
+        }
+
+        // Courses routing
+        public static class CourseRouting
+        {
+            private const string Prefix = Rule + "/" + "Course/";
+            public const string List = Prefix + ListRoute;
+            public const string GetById = Prefix + SingleRoute;
+            public const string Create = Prefix + "Create";
+            public const string Edit = Prefix + "Edit";
+            public const string Delete = Prefix + "Delete/{id}";
+            public const string Paginated = Prefix + "Paginated";
+        }
+
+        // Lectures routing
+        public static class LectureRouting
+        {
+            private const string Prefix = Rule + "/" + "Lecture/";
+            public const string List = Prefix + ListRoute;
+            public const string GetById = Prefix + SingleRoute;
+            public const string Create = Prefix + "Create";
+            public const string Edit = Prefix + "Edit";
+            public const string Delete = Prefix + "Delete/{id}";
+            public const string Paginated = Prefix + "Paginated";
+        }
+
+        // Exams routing
+        public static class ExamRouting
+        {
+            private const string Prefix = Rule + "/" + "Exam/";
+            public const string List = Prefix + ListRoute;
+            public const string GetById = Prefix + SingleRoute;
+            public const string Create = Prefix + "Create";
+            public const string Edit = Prefix + "Edit";
+            public const string Delete = Prefix + "Delete/{id}";
+            public const string Paginated = Prefix + "Paginated";
+        }
+
+        // CourseSubscriptions routing
+        public static class CourseSubscriptionRouting
+        {
+            private const string Prefix = Rule + "/" + "CourseSubscription/";
+            public const string List = Prefix + ListRoute;
+            public const string GetById = Prefix + SingleRoute;
+            public const string Create = Prefix + "Create";
+            public const string Edit = Prefix + "Edit";
+            public const string Delete = Prefix + "Delete/{id}";
+            public const string Paginated = Prefix + "Paginated";
+        }
+
         public static class AuthenticationRouting
         {
             private const string Prefix = Rule + "/" + "Authentication/";

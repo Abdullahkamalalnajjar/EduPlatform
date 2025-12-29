@@ -12,8 +12,8 @@ using Project.EF;
 namespace Project.EF.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20251229032004_newmig")]
-    partial class newmig
+    [Migration("20251229151447_newMig")]
+    partial class newMig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -926,7 +926,7 @@ namespace Project.EF.Migrations
                     b.HasOne("Project.Data.Entities.Users.ApplicationUser", "User")
                         .WithOne("ParentProfile")
                         .HasForeignKey("Project.Data.Entities.People.Parent", "ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -937,7 +937,7 @@ namespace Project.EF.Migrations
                     b.HasOne("Project.Data.Entities.Users.ApplicationUser", "User")
                         .WithOne("StudentProfile")
                         .HasForeignKey("Project.Data.Entities.People.Student", "ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Project.Data.Entities.People.Parent", "Parent")

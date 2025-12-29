@@ -16,7 +16,7 @@ namespace Project.EF.Configurations
             builder.HasOne(x => x.User)
                 .WithOne(u => u.StudentProfile)
                 .HasForeignKey<Student>(x => x.ApplicationUserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(x => x.ParentPhoneNumber).HasMaxLength(50);
 
