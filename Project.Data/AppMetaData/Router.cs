@@ -2,167 +2,161 @@
 {
     public static class Router
     {
-
-        private const string root = "Api";
-        private const string version = "V1";
+        private const string root = "api"; // use lowercase
+        private const string version = "v1"; // use lowercase
         private const string Rule = root + "/" + version;
-        private const string SingleRoute = "{id}";
-        private const string ListRoute = "List";
+
+        // Common single id pattern
+        private const string IdSegment = "{id}";
+
         public static class GoogleRouting
         {
-            private const string Prefix = Rule + "/" + "Google/";
-            public const string GoogleSignIn = Prefix + "GoogleSignIn";
-            public const string GoogleLoginCallback = Prefix + "GoogleLoginCallback";
+            private const string Prefix = Rule + "/google";
+            public const string GoogleSignIn = Prefix + "/signin";
+            public const string GoogleLoginCallback = Prefix + "/callback";
         }
-    
- 
+
         public static class PaymentRouting
         {
-            private const string Prefix = Rule + "/" + "Payment/";
-            public const string CreatePayment = Prefix + "CreatePayment";
-            public const string GetPaymentById = Prefix + SingleRoute;
-            public const string GetPaymentsForUser = Prefix + "GetPaymentsForUser";
-            public const string GetPaymentIntent = Prefix + "GetPaymentIntent/{basketId}";
-            public const string UpdatePaymentStatus = Prefix + "UpdatePaymentStatus/{paymentId}";
+            private const string Prefix = Rule + "/payments";
+            public const string CreatePayment = Prefix;
+            public const string GetPaymentById = Prefix + "/" + IdSegment;
+            public const string GetPaymentsForUser = Prefix + "/user/{userId}";
+            public const string GetPaymentIntent = Prefix + "/intent/{basketId}";
+            public const string UpdatePaymentStatus = Prefix + "/status/{paymentId}";
         }
 
         public static class EmailRouting
         {
-            private const string Prefix = Rule + "/" + "Email/";
-            public const string SendEmail = Prefix + "SendEmail";
-
+            private const string Prefix = Rule + "/email";
+            public const string SendEmail = Prefix + "/send";
         }
+
         public static class UserRouting
         {
-            private const string Prefix = Rule + "/" + "AppUser/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
-            public const string ChangePassword = Prefix + "ChangePassword";
+            private const string Prefix = Rule + "/users";
+            public const string List = Prefix; // GET /api/v1/users
+            public const string GetById = Prefix + "/" + IdSegment; // GET /api/v1/users/{id}
+            public const string Create = Prefix; // POST /api/v1/users
+            public const string Edit = Prefix + "/" + IdSegment; // PUT /api/v1/users/{id}
+            public const string Delete = Prefix + "/" + IdSegment; // DELETE /api/v1/users/{id}
+            public const string Paginated = Prefix + "/paginated";
+            public const string ChangePassword = Prefix + "/change-password";
         }
+
         public static class RoleRouting
         {
-            private const string Prefix = Rule + "/" + "Role/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
+            private const string Prefix = Rule + "/roles";
+            public const string List = Prefix;
+            public const string GetById = Prefix + "/" + IdSegment;
+            public const string Create = Prefix;
+            public const string Edit = Prefix + "/" + IdSegment;
+            public const string Delete = Prefix + "/" + IdSegment;
+            public const string Paginated = Prefix + "/paginated";
         }
 
-        // Subjects routing
         public static class SubjectRouting
         {
-            private const string Prefix = Rule + "/" + "Subject/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
+            private const string Prefix = Rule + "/subjects";
+            public const string List = Prefix;
+            public const string GetById = Prefix + "/" + IdSegment;
+            public const string Create = Prefix;
+            public const string Edit = Prefix + "/" + IdSegment;
+            public const string Delete = Prefix + "/" + IdSegment;
+            public const string Paginated = Prefix + "/paginated";
         }
 
-        // Students routing
         public static class StudentRouting
         {
-            private const string Prefix = Rule + "/" + "Student/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
+            private const string Prefix = Rule + "/students";
+            public const string List = Prefix;
+            public const string GetById = Prefix + "/" + IdSegment;
+            public const string Create = Prefix;
+            public const string Edit = Prefix + "/" + IdSegment;
+            public const string Delete = Prefix + "/" + IdSegment;
+            public const string Paginated = Prefix + "/paginated";
         }
 
-        // Teachers routing
         public static class TeacherRouting
         {
-            private const string Prefix = Rule + "/" + "Teacher/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
+            private const string Prefix = Rule + "/teachers";
+            public const string List = Prefix;
+            public const string GetById = Prefix + "/" + IdSegment;
+            public const string Create = Prefix;
+            public const string Edit = Prefix + "/" + IdSegment;
+            public const string Delete = Prefix + "/" + IdSegment;
+            public const string Paginated = Prefix + "/paginated";
         }
 
-        // Courses routing
         public static class CourseRouting
         {
-            private const string Prefix = Rule + "/" + "Course/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
+            private const string Prefix = Rule + "/courses";
+            public const string List = Prefix;
+            public const string GetById = Prefix + "/" + IdSegment;
+            public const string Create = Prefix;
+            public const string Edit = Prefix + "/" + IdSegment;
+            public const string Delete = Prefix + "/" + IdSegment;
+            public const string Paginated = Prefix + "/paginated";
         }
 
-        // Lectures routing
         public static class LectureRouting
         {
-            private const string Prefix = Rule + "/" + "Lecture/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
+            private const string Prefix = Rule + "/lectures";
+            public const string List = Prefix;
+            public const string GetById = Prefix + "/" + IdSegment;
+            public const string Create = Prefix;
+            public const string Edit = Prefix + "/" + IdSegment;
+            public const string Delete = Prefix + "/" + IdSegment;
+            public const string Paginated = Prefix + "/paginated";
         }
 
-        // Exams routing
         public static class ExamRouting
         {
-            private const string Prefix = Rule + "/" + "Exam/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
+            private const string Prefix = Rule + "/exams";
+            public const string List = Prefix;
+            public const string GetById = Prefix + "/" + IdSegment;
+            public const string Create = Prefix;
+            public const string Edit = Prefix + "/" + IdSegment;
+            public const string Delete = Prefix + "/" + IdSegment;
+            public const string Paginated = Prefix + "/paginated";
         }
 
-        // CourseSubscriptions routing
         public static class CourseSubscriptionRouting
         {
-            private const string Prefix = Rule + "/" + "CourseSubscription/";
-            public const string List = Prefix + ListRoute;
-            public const string GetById = Prefix + SingleRoute;
-            public const string Create = Prefix + "Create";
-            public const string Edit = Prefix + "Edit";
-            public const string Delete = Prefix + "Delete/{id}";
-            public const string Paginated = Prefix + "Paginated";
+            private const string Prefix = Rule + "/course-subscriptions";
+            public const string List = Prefix;
+            public const string GetById = Prefix + "/" + IdSegment;
+            public const string Create = Prefix;
+            public const string Edit = Prefix + "/" + IdSegment;
+            public const string Delete = Prefix + "/" + IdSegment;
+            public const string Paginated = Prefix + "/paginated";
         }
 
         public static class AuthenticationRouting
         {
-            private const string Prefix = Rule + "/" + "Authentication/";
-            public const string SginIn = Prefix + "SginIn";
-            public const string SignUp = Prefix + "SignUp";
-            public const string RefreshToken = Prefix + "RefreshToken";
-            public const string RevokeRefreshToken = Prefix + "RevokeRefreshToken";
-            public const string ChangePassword = Prefix + "ChangePassword";
-            public const string SendOtp = Prefix + "SendOtp";
-            public const string Verifyotp = Prefix + "verify-otp";
-            public const string ResetPassword = Prefix + "reset-password";
-            public const string ConfirmEmail = Prefix + "ConfirmEmail";
-            public const string ResendConfirmEmail = Prefix + "ResendConfirmEmail";
+            private const string Prefix = Rule + "/auth";
+            public const string SginIn = Prefix + "/signin";
+            public const string SignUp = Prefix + "/signup";
+            public const string RefreshToken = Prefix + "/refresh-token";
+            public const string RevokeRefreshToken = Prefix + "/revoke-refresh-token";
+            public const string ChangePassword = Prefix + "/change-password";
+            public const string SendOtp = Prefix + "/send-otp";
+            public const string Verifyotp = Prefix + "/verify-otp";
+            public const string ResetPassword = Prefix + "/reset-password";
+            public const string ConfirmEmail = Prefix + "/confirm-email";
+            public const string ResendConfirmEmail = Prefix + "/resend-confirm-email";
         }
+
         public static class AuthorizationRouting
         {
-            private const string Prefix = Rule + "/" + "Authorization/";
-            public const string CreateRole = Prefix + "CreateRole";
-            public const string MangeUserRoles = Prefix + "mange-user-roles/{userId}";
-            public const string GetRolesList = Prefix + "GetRolesList";
-            public const string GetClimsList = Prefix + "GetClaimsList";
-            public const string MangeUserClaims = Prefix + "mange-user-calims/{userId}";
-            public const string UpdateRole = Prefix + "UpdateRole";
-            public const string UpdateClaims = Prefix + "UpdateClaims";
-
+            private const string Prefix = Rule + "/authorization";
+            public const string CreateRole = Prefix + "/create-role";
+            public const string MangeUserRoles = Prefix + "/manage-user-roles/" + "{userId}";
+            public const string GetRolesList = Prefix + "/roles";
+            public const string GetClimsList = Prefix + "/claims";
+            public const string MangeUserClaims = Prefix + "/manage-user-claims/" + "{userId}";
+            public const string UpdateRole = Prefix + "/update-role";
+            public const string UpdateClaims = Prefix + "/update-claims";
         }
     }
 }

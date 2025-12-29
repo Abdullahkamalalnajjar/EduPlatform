@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Project.Api.Base;
-using Project.Data.AppMetaData;
 using Project.Core.Features.CourseSubscriptions.Commands.Models;
 using Project.Core.Features.CourseSubscriptions.Queries.Models;
+using Project.Data.AppMetaData;
 
 namespace Project.Api.Controllers
 {
-    [ApiController]
     public class CourseSubscriptionController : AppBaseController
     {
         [HttpGet(Router.CourseSubscriptionRouting.List)]
@@ -33,6 +32,13 @@ namespace Project.Api.Controllers
 
         [HttpPut(Router.CourseSubscriptionRouting.Edit)]
         public async Task<IActionResult> Edit([FromBody] EditCourseSubscriptionCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return NewResult(response);
+        }
+
+        [HttpPut(Router.CourseSubscriptionRouting.Edit + "/status")]
+        public async Task<IActionResult> ChangeStatus([FromBody] ChangeCourseSubscriptionStatusCommand command)
         {
             var response = await Mediator.Send(command);
             return NewResult(response);

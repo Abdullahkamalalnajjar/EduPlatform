@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Project.Api.Base;
-using Project.Data.AppMetaData;
 using Project.Core.Features.Lectures.Commands.Models;
 using Project.Core.Features.Lectures.Queries.Models;
-using Project.Core.Features.Lectures.Queries.Results;
+using Project.Data.AppMetaData;
 
 namespace Project.Api.Controllers
 {
