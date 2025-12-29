@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Features\Departments\**" />
+    <Compile Remove="Features\Patients\**" />
+    <Compile Remove="Features\StoreItems\**" />
+    <Compile Remove="Features\Stores\**" />
+    <EmbeddedResource Remove="Features\Departments\**" />
+    <EmbeddedResource Remove="Features\Patients\**" />
+    <EmbeddedResource Remove="Features\StoreItems\**" />
+    <EmbeddedResource Remove="Features\Stores\**" />
+    <None Remove="Features\Departments\**" />
+    <None Remove="Features\Patients\**" />
+    <None Remove="Features\StoreItems\**" />
+    <None Remove="Features\Stores\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Authentication\Command\Results\" />
+    <Folder Include="Features\Authentication\Command\Validators\" />
+    <Folder Include="Features\Authentication\Queries\" />
+    <Folder Include="Features\Claims\Commands\" />
+    <Folder Include="Mapping\ApplicationUsers\Queries\" />
+    <Folder Include="Mapping\Roles\Commands\" />
+    <Folder Include="Mapping\Roles\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.17" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Project.Data\Project.Data.csproj" />
+    <ProjectReference Include="..\Project.EF\Project.EF.csproj" />
+    <ProjectReference Include="..\Project.Service\Project.Service.csproj" />
+  </ItemGroup>
+
+</Project>
