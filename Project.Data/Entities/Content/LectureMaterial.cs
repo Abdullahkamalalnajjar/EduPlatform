@@ -6,7 +6,7 @@ namespace Project.Data.Entities.Content
 
         public string Type { get; set; } = null!; // Video, Pdf, Image, Homework
         public string FileUrl { get; set; } = null!;
-
+        public bool IsFree { get; set; } = false;
         public int LectureId { get; set; }
         public Lecture Lecture { get; set; } = null!;
     }

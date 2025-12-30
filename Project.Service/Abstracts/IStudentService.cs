@@ -9,6 +9,6 @@ namespace Project.Service.Abstracts
         Task<Student> CreateAsync(Student entity, CancellationToken cancellationToken = default);
         Task<Student> UpdateAsync(Student entity, CancellationToken cancellationToken = default);
         Task DeleteAsync(int id, CancellationToken cancellationToken = default);
-
+        Task<IEnumerable<Student>> GetByGradeYearAsync(int gradeYear, CancellationToken cancellationToken = default);
     }
 }

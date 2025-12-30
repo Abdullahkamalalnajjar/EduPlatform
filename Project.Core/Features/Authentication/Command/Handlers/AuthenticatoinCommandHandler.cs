@@ -102,6 +102,17 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                             SubjectId = request.SubjectId.Value
                         };
                         await _unitOfWork.Teachers.AddAsync(teacher, cancellationToken);
+
+                        // Add education stages
+                        if (request.EducationStageIds != null && request.EducationStageIds.Any())
+                        {
+                            foreach (var stageId in request.EducationStageIds.Distinct())
+                            {
+                                var tes = new TeacherEducationStage { Teacher = teacher, EducationStageId = stageId };
+                                await _unitOfWork.TeacherEducationStages.AddAsync(tes, cancellationToken);
+                            }
+                        }
+
                         break;
                     case "parent":
                         var parent = new Parent
@@ -214,6 +225,26 @@ namespace Project.Core.Features.Authentication.Command.Handlers
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

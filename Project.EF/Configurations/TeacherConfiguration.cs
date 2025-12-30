@@ -9,6 +9,7 @@ namespace Project.EF.Configurations
         public void Configure(EntityTypeBuilder<Teacher> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.HasIndex(x => x.ApplicationUserId).IsUnique();
 
             builder.Property(x => x.ApplicationUserId).IsRequired();
 
@@ -17,14 +18,19 @@ namespace Project.EF.Configurations
                 .HasForeignKey<Teacher>(x => x.ApplicationUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(x => x.Subject)
+            builder.HasOne(t => t.Subject)
                 .WithMany(s => s.Teachers)
-                .HasForeignKey(x => x.SubjectId)
+                .HasForeignKey(t => t.SubjectId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(x => x.Courses)
+            builder.HasMany(t => t.Courses)
                 .WithOne(c => c.Teacher)
                 .HasForeignKey(c => c.TeacherId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(t => t.TeacherEducationStages)
+                .WithOne(ts => ts.Teacher)
+                .HasForeignKey(ts => ts.TeacherId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

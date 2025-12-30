@@ -1,4 +1,7 @@
-﻿namespace Project.Core.Features.Authentication.Command.Models
+﻿using MediatR;
+using Project.Core.Bases;
+
+namespace Project.Core.Features.Authentication.Command.Models
 {
     public class SignUpUserCommand : IRequest<Response<string>>
     {
@@ -15,10 +18,10 @@
         public string? ParentPhoneNumber { get; set; } // student
 
         public int? SubjectId { get; set; } // teacher
+        public List<int> EducationStageIds { get; set; } = new List<int>(); // teacher may select multiple stages
 
         public string? NationalId { get; set; } // parent
 
         public int? TeacherId { get; set; } // assistant
     }
-
 }

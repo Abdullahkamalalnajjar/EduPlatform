@@ -19,6 +19,7 @@ namespace Project.Service.Implementations
             return await _unitOfWork.Teachers.GetTableNoTracking()
                 .Include(t => t.User)
                 .Include(t => t.Courses)
+                .ThenInclude(c => c.Lectures)
                 .ToListAsync(cancellationToken);
         }
 
@@ -52,6 +53,32 @@ namespace Project.Service.Implementations
                 await _unitOfWork.Teachers.Delete(entity);
                 await _unitOfWork.CompeleteAsync();
             }
+        }
+
+        public async Task<IEnumerable<Teacher>> GetByGradeYearAndSubjectAsync(int gradeYear, int subjectId, CancellationToken cancellationToken = default)
+        {
+            // Find teachers who teach courses that match gradeYear and have the provided subjectId
+            return await _unitOfWork.Teachers.GetTableNoTracking()
+                .Include(t => t.User)
+                .Include(t => t.Courses)
+                .Where(t => t.Subject.Id == subjectId && t.Courses.Any(c => c.GradeYear == gradeYear))
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<Teacher>> GetByEducationStageAndSubjectAsync(int educationStageId, int subjectId, CancellationToken cancellationToken = default)
+        {
+            return await _unitOfWork.TeacherEducationStages.GetTableNoTracking()
+                .Include(ts => ts.Teacher)
+                .ThenInclude(t => t.User)
+                .Include(ts => ts.EducationStage)
+                .Where(ts => ts.EducationStageId == educationStageId && ts.Teacher.SubjectId == subjectId)
+                .Select(ts => ts.Teacher)
+                .Distinct()
+                .Include(t => t.Courses)
+                    .ThenInclude(c => c.Lectures)
+                        .ThenInclude(l => l.Materials)
+                .Include(t => t.Subject)
+                .ToListAsync(cancellationToken);
         }
     }
 }

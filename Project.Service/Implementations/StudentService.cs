@@ -55,6 +55,13 @@ namespace Project.Service.Implementations
             }
         }
 
-     
+        public async Task<IEnumerable<Student>> GetByGradeYearAsync(int gradeYear, CancellationToken cancellationToken = default)
+        {
+            return await _unitOfWork.Students.GetTableNoTracking()
+                .Include(s => s.User)
+                .Include(s => s.CourseSubscriptions)
+                .Where(s => s.GradeYear == gradeYear)
+                .ToListAsync(cancellationToken);
+        }
     }
 }
