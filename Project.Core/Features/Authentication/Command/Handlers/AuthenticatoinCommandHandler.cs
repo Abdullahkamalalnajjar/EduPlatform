@@ -6,7 +6,7 @@ namespace Project.Core.Features.Authentication.Command.Handlers
 {
     public class AuthenticatoinCommandHandler : ResponseHandler,
         IRequestHandler<SignInCommand, Response<AuthResponse>>,
-        IRequestHandler<SignUpUserCommand, Response<string>>,
+        IRequestHandler<SignUpUserCommand, Response<AuthResponse>>,
         IRequestHandler<CreateNewRefreshTokenCommand, Response<AuthResponse>>,
         IRequestHandler<RevokeRefreashTokenCommand, Response<string>>,
         IRequestHandler<ConfirmEmailCommand, Response<string>>,
@@ -20,7 +20,7 @@ namespace Project.Core.Features.Authentication.Command.Handlers
         private readonly ILogger<AuthenticatoinCommandHandler> _logger;
         private readonly IMapper _mapper;
         private readonly IJwtProvider _jwtProvider;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUser> _user_manager;
 
         public AuthenticatoinCommandHandler(IEmailSender emailSender, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IAuthService authService, ILogger<AuthenticatoinCommandHandler> logger, IMapper mapper, IJwtProvider jwtProvider, UserManager<ApplicationUser> userManager)
         {
@@ -31,7 +31,7 @@ namespace Project.Core.Features.Authentication.Command.Handlers
             _logger = logger;
             _mapper = mapper;
             _jwtProvider = jwtProvider;
-            _userManager = userManager;
+            _user_manager = userManager;
         }
         public async Task<Response<AuthResponse>> Handle(SignInCommand request, CancellationToken cancellationToken)
         {
@@ -47,35 +47,35 @@ namespace Project.Core.Features.Authentication.Command.Handlers
             return Success(result.Response!, "Login successful");
         }
 
-        public async Task<Response<string>> Handle(SignUpUserCommand request, CancellationToken cancellationToken)
+        public async Task<Response<AuthResponse>> Handle(SignUpUserCommand request, CancellationToken cancellationToken)
         {
             await using var transaction = await _unitOfWork.BeginTransactionAsync();
 
             try
             {
                 // Check if the user already exists
-                var existingUser = await _userManager.FindByEmailAsync(request.Email);
+                var existingUser = await _user_manager.FindByEmailAsync(request.Email);
                 if (existingUser is not null)
-                    return BadRequest<string>("An account with this email already exists.");
+                    return BadRequest<AuthResponse>("An account with this email already exists.");
 
                 // Create a new user and mark email confirmed so no confirmation required
                 var newUser = _mapper.Map<ApplicationUser>(request);
                 newUser.EmailConfirmed = true; // skip email confirmation
 
-                var result = await _userManager.CreateAsync(newUser, request.Password);
+                var result = await _user_manager.CreateAsync(newUser, request.Password);
                 if (!result.Succeeded)
                 {
                     var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                    return BadRequest<string>(errors);
+                    return BadRequest<AuthResponse>(errors);
                 }
 
                 // assign role
                 var role = request.Role ?? "Student";
-                var roleResult = await _userManager.AddToRoleAsync(newUser, role);
+                var roleResult = await _user_manager.AddToRoleAsync(newUser, role);
                 if (!roleResult.Succeeded)
                 {
                     await transaction.RollbackAsync();
-                    return BadRequest<string>("Failed to assign role to user.");
+                    return BadRequest<AuthResponse>("Failed to assign role to user.");
                 }
 
                 // create profile based on role
@@ -94,7 +94,7 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                         if (!request.SubjectId.HasValue)
                         {
                             await transaction.RollbackAsync();
-                            return BadRequest<string>("SubjectId is required for teacher role.");
+                            return BadRequest<AuthResponse>("SubjectId is required for teacher role.");
                         }
                         var teacher = new Teacher
                         {
@@ -126,7 +126,7 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                         if (!request.TeacherId.HasValue)
                         {
                             await transaction.RollbackAsync();
-                            return BadRequest<string>("TeacherId is required for assistant role.");
+                            return BadRequest<AuthResponse>("TeacherId is required for assistant role.");
                         }
                         var assistant = new Assistant
                         {
@@ -148,31 +148,30 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                 if (!string.IsNullOrEmpty(tokenResult.ErrorMessage))
                 {
                     // user created but token generation failed
-                    return Success<string>("", "Account created but automatic login failed: " + tokenResult.ErrorMessage);
+                    return Success<AuthResponse>(null!, "Account created but automatic login failed: " + tokenResult.ErrorMessage);
                 }
 
                 // return token value to client
-                return Success<string>(tokenResult.Response!.Token, "Account created and logged in successfully");
+                return Success<AuthResponse>(tokenResult.Response!, "Account created and logged in successfully");
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                return BadRequest<string>(ex.Message.ToString());
+                return BadRequest<AuthResponse>(ex.Message.ToString());
             }
         }
 
         public async Task<Response<AuthResponse>> Handle(CreateNewRefreshTokenCommand request, CancellationToken cancellationToken)
         {
-            var newRefreshToken = await _authService.GetRefreshTokenAsync(request.Token, request.RefreshToken);
+            var newRefreshToken = await _authService.GetRefreshTokenAsync(request.Token, request.RefreshToken, cancellationToken);
             if (newRefreshToken is null)
                 return BadRequest<AuthResponse>("Invalid token or refresh token");
             return Success<AuthResponse>(newRefreshToken, "Refresh token created successfully");
-
         }
 
         public async Task<Response<string>> Handle(RevokeRefreashTokenCommand request, CancellationToken cancellationToken)
         {
-            var result = await _authService.RevokeRefreshTokenAsync(request.Token, request.RefreshToken);
+            var result = await _authService.RevokeRefreshTokenAsync(request.Token, request.RefreshToken, cancellationToken);
             if (!result)
                 return BadRequest<string>("Invalid token or refresh token");
             return Success<string>("Refresh token revoked successfully", "Refresh token revoked successfully");
@@ -225,6 +224,46 @@ namespace Project.Core.Features.Authentication.Command.Handlers
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

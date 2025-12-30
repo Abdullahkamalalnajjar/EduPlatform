@@ -1,7 +1,4 @@
-using Microsoft.EntityFrameworkCore;
 using Project.Data.Entities.Exams;
-using Project.Data.Interfaces;
-using Project.Service.Abstracts;
 
 namespace Project.Service.Implementations
 {
@@ -19,6 +16,7 @@ namespace Project.Service.Implementations
             return await _unitOfWork.Exams.GetTableNoTracking()
                 .Include(e => e.Lecture)
                 .Include(e => e.Questions)
+                .ThenInclude(o => o.Options)
                 .ToListAsync(cancellationToken);
         }
 
@@ -27,6 +25,7 @@ namespace Project.Service.Implementations
             return await _unitOfWork.Exams.GetTableNoTracking()
                 .Include(e => e.Lecture)
                 .Include(e => e.Questions)
+                .ThenInclude(o => o.Options)
                 .SingleOrDefaultAsync(e => e.Id == id, cancellationToken);
         }
 

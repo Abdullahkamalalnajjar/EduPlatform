@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using Project.Core.Bases;
+using Project.Data.Helpers;
 
 namespace Project.Core.Features.Authentication.Command.Models
 {
-    public class SignUpUserCommand : IRequest<Response<string>>
+    public class SignUpUserCommand : IRequest<Response<AuthResponse>>
     {
         public string Email { get; set; }
         public string Password { get; set; }

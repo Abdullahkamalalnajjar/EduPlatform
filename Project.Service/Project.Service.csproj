@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Project.EF\Project.EF.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
-
 </Project>

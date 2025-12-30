@@ -10,6 +10,7 @@
         bool IsDisable,
         int TokenExpiresIn,
         string? RefreshToken,
-        DateTime RefreshTokenExpiresIn
+        DateTime RefreshTokenExpiresIn,
+        IEnumerable<string> Roles
  );
 }

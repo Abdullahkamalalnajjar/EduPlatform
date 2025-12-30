@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Project.Api.Base;
-using Project.Data.AppMetaData;
 using Project.Core.Features.Exams.Commands.Models;
 using Project.Core.Features.Exams.Queries.Models;
+using Project.Data.AppMetaData;
 
 namespace Project.Api.Controllers
 {
@@ -42,6 +42,23 @@ namespace Project.Api.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var request = new DeleteExamCommand { Id = id };
+            var response = await Mediator.Send(request);
+            return NewResult(response);
+        }
+
+        // Submit exam answers
+        [HttpPost(Router.ExamRouting.List + "/submit")]
+        public async Task<IActionResult> SubmitAnswers([FromBody] SubmitExamAnswersCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return NewResult(response);
+        }
+
+        // Get student's score for an exam
+        [HttpGet(Router.ExamRouting.List + "/{examId}/students/{studentId}/score")]
+        public async Task<IActionResult> GetStudentScore(int examId, int studentId)
+        {
+            var request = new GetStudentExamScoreQuery { ExamId = examId, StudentId = studentId };
             var response = await Mediator.Send(request);
             return NewResult(response);
         }

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Project.Api.Base;
-using Project.Core.Features.Exams.Commands.Models;
-using Project.Core.Features.Exams.Queries.Models;
+using Project.Core.Features.Questions.Commands.Models;
+using Project.Core.Features.Questions.Queries.Models;
 using Project.Data.AppMetaData;
 
 namespace Project.Api.Controllers

@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using Project.Data.Entities.Exams;
+using Project.Data.Interfaces;
+using Project.Service.Abstracts;
+using Project.Data.Dtos;
 
 namespace Project.Service.Implementations
 {
@@ -49,6 +53,44 @@ namespace Project.Service.Implementations
                 await _unitOfWork.StudentExamResults.Delete(entity);
                 await _unitOfWork.CompeleteAsync();
             }
+        }
+
+        public async Task<int> CalculateTotalScoreAsync(int examId, IEnumerable<StudentAnswerDto> answers, CancellationToken cancellationToken = default)
+        {
+            // Load questions and their options for the exam
+            var questions = await _unitOfWork.Questions.GetTableNoTracking()
+                .Include(q => q.Options)
+                .Where(q => q.ExamId == examId)
+                .ToListAsync(cancellationToken);
+
+            var answerMap = answers.ToDictionary(a => a.QuestionId, a => a);
+
+            int total = 0;
+
+            foreach (var question in questions)
+            {
+                // No answer provided
+                if (!answerMap.TryGetValue(question.Id, out var studentAnswer))
+                    continue;
+
+                // handle MCQ by comparing selected option ids to correct option ids
+                if (string.Equals(question.AnswerType, "MCQ", StringComparison.OrdinalIgnoreCase))
+                {
+                    var correctOptionIds = question.Options.Where(o => o.IsCorrect).Select(o => o.Id).OrderBy(i => i).ToList();
+                    var selected = studentAnswer.SelectedOptionIds.OrderBy(i => i).ToList();
+                    if (correctOptionIds.SequenceEqual(selected))
+                    {
+                        total += question.Score;
+                    }
+                }
+                else if (string.Equals(question.AnswerType, "TextAnswer", StringComparison.OrdinalIgnoreCase) ||
+                         string.Equals(question.AnswerType, "ImageAnswer", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Text/Image answers require manual grading. For now, treat as 0.
+                }
+            }
+
+            return total;
         }
     }
 }

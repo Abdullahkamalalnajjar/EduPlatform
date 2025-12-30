@@ -55,14 +55,12 @@ namespace Project.Service.Implementations
                 IsDisable: user.IsDisable,
                 TokenExpiresIn: expiresIn,
                 RefreshToken: refreshToken,
-                RefreshTokenExpiresIn: refreshTokenExpiresIn
+                RefreshTokenExpiresIn: refreshTokenExpiresIn,
+                Roles: userRoles
             );
 
             return AuthResult.Success(response);
         }
-
-
-
 
         public async Task<AuthResponse> GetRefreshTokenAsync(string token, string refreshToken, CancellationToken cancellationToken = default)
         {
@@ -101,7 +99,8 @@ namespace Project.Service.Implementations
 
                 TokenExpiresIn: expiresIn,
                 RefreshToken: newRefreshToken,
-                RefreshTokenExpiresIn: newRefreshTokenExpiresIn
+                RefreshTokenExpiresIn: newRefreshTokenExpiresIn,
+                Roles: userRoles
                 );
             return response;
 
