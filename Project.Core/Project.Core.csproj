@@ -27,7 +27,6 @@
     <Folder Include="Features\Claims\Commands\" />
     <Folder Include="Mapping\ApplicationUsers\Queries\" />
     <Folder Include="Mapping\Roles\Commands\" />
-    <Folder Include="Mapping\Roles\Queries\" />
   </ItemGroup>
 
   <ItemGroup>

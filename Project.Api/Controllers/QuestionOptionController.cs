@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Project.Api.Base;
-using Project.Data.AppMetaData;
 using Project.Core.Features.Exams.Commands.Models;
 using Project.Core.Features.Exams.Queries.Models;
+using Project.Data.AppMetaData;
 
 namespace Project.Api.Controllers
 {
-    [ApiController]
     public class QuestionOptionController : AppBaseController
     {
         [HttpGet(Router.ExamRouting.List + "/questions/options")]

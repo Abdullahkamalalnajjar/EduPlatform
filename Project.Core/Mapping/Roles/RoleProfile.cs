@@ -2,6 +2,9 @@
 {
     public partial class RoleProfile : Profile
     {
-
+        public RoleProfile()
+        {
+            GetRolesMapping();
+        }
     }
 }

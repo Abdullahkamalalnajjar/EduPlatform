@@ -11,7 +11,7 @@ namespace Project.Api.Controllers
 
     public class RoleController : AppBaseController
     {
-        [HasPermission(Permissions.GetRoles)]
+        //  [HasPermission(Permissions.GetRoles)]
         [HttpGet("GetRoles")]
         public async Task<IActionResult> GetRoles(bool? includeDeleted)
         {
@@ -20,7 +20,7 @@ namespace Project.Api.Controllers
             return Ok(response);
         }
 
-        [HasPermission(Permissions.GetRoles)]
+        //  [HasPermission(Permissions.GetRoles)]
         [HttpGet("GetRolesDetails")]
         public async Task<IActionResult> GetRolesDetails(string roleId)
         {
