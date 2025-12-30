@@ -9,5 +9,6 @@ namespace Project.Service.Abstracts
         Task<CourseSubscription> CreateAsync(CourseSubscription entity, CancellationToken cancellationToken = default);
         Task<CourseSubscription> UpdateAsync(CourseSubscription entity, CancellationToken cancellationToken = default);
         Task DeleteAsync(int id, CancellationToken cancellationToken = default);
+        Task<IEnumerable<CourseSubscriptionDto>> GetByStudentIdAsync(int studentId, CancellationToken cancellationToken = default);
     }
 }

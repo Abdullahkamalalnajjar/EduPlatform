@@ -9,5 +9,6 @@ namespace Project.Service.Abstracts
         Task<LectureMaterial> CreateAsync(LectureMaterial entity, CancellationToken cancellationToken = default);
         Task<LectureMaterial> UpdateAsync(LectureMaterial entity, CancellationToken cancellationToken = default);
         Task DeleteAsync(int id, CancellationToken cancellationToken = default);
+        Task<int> ChangeIsFreeLectureMaterialAsync(int lectureId, bool isFree, CancellationToken cancellationToken = default);
     }
 }

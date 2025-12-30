@@ -1,7 +1,4 @@
-using Microsoft.EntityFrameworkCore;
 using Project.Data.Entities.Subscriptions;
-using Project.Data.Interfaces;
-using Project.Service.Abstracts;
 
 namespace Project.Service.Implementations
 {
@@ -52,6 +49,23 @@ namespace Project.Service.Implementations
                 await _unitOfWork.CourseSubscriptions.Delete(entity);
                 await _unitOfWork.CompeleteAsync();
             }
+        }
+
+        public async Task<IEnumerable<CourseSubscriptionDto>> GetByStudentIdAsync(int studentId, CancellationToken cancellationToken = default)
+        {
+            return await _unitOfWork.CourseSubscriptions.GetTableNoTracking()
+                .Where(cs => cs.StudentId == studentId)
+                .Select(cs => new CourseSubscriptionDto
+                {
+                    Id = cs.Id,
+                    StudentId = cs.StudentId,
+                    StudentName = cs.Student.User.FullName,
+                    CourseId = cs.CourseId,
+                    CourseName = cs.Course.Title,
+                    Status = cs.Status,
+                    CreatedAt = cs.CreatedAt
+                })
+                .ToListAsync(cancellationToken);
         }
     }
 }

@@ -19,7 +19,25 @@ namespace Project.Core.Features.Exams.Queries.Handlers
         public async Task<Response<IEnumerable<ExamResponse>>> Handle(GetAllExamsQuery request, CancellationToken cancellationToken)
         {
             var items = await _service.GetAllAsync(cancellationToken);
-            var result = items.Select(e => new ExamResponse { Id = e.Id, LectureId = e.LectureId, QuestionIds = e.Questions.Select(q => q.Id) }).ToList();
+            var result = items.Select(e =>
+            new ExamResponse
+            {
+                Id = e.Id,
+                LectureId = e.LectureId,
+                LectureTitle = e.Lecture.Title,
+                Questions = e.Questions.Select(q => new QuestionDto
+                {
+                    Id = q.Id,
+                    Text = q.Content,
+                    Options = q.Options.Select(o => new OptionResponse
+                    {
+                        Id = o.Id,
+                        Content = o.Content,
+                        IsCorrect = o.IsCorrect
+                    }).ToList()
+                })
+            }
+            ).ToList();
             return Success<IEnumerable<ExamResponse>>(result);
         }
 
@@ -27,7 +45,22 @@ namespace Project.Core.Features.Exams.Queries.Handlers
         {
             var item = await _service.GetByIdAsync(request.Id, cancellationToken);
             if (item is null) return NotFound<ExamResponse>("Exam not found");
-            var resp = new ExamResponse { Id = item.Id, LectureId = item.LectureId, QuestionIds = item.Questions.Select(q => q.Id) };
+            var resp = new ExamResponse
+            {
+                Id = item.Id,
+                LectureId = item.LectureId,
+                Questions = item.Questions.Select(q => new QuestionDto
+                {
+                    Id = q.Id,
+                    Text = q.Content,
+                    Options = q.Options.Select(o => new OptionResponse
+                    {
+                        Id = o.Id,
+                        Content = o.Content,
+                        IsCorrect = o.IsCorrect
+                    }).ToList()
+                })
+            };
             return Success(resp);
         }
     }

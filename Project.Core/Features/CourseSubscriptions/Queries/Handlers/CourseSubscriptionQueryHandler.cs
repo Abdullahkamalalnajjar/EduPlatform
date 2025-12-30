@@ -1,14 +1,12 @@
-using AutoMapper;
-using MediatR;
 using Project.Core.Features.CourseSubscriptions.Queries.Models;
 using Project.Core.Features.CourseSubscriptions.Queries.Results;
-using Project.Service.Abstracts;
 
 namespace Project.Core.Features.CourseSubscriptions.Queries.Handlers
 {
     public class CourseSubscriptionQueryHandler : ResponseHandler,
         IRequestHandler<GetAllCourseSubscriptionsQuery, Response<IEnumerable<CourseSubscriptionResponse>>>,
-        IRequestHandler<GetCourseSubscriptionByIdQuery, Response<CourseSubscriptionResponse>>
+        IRequestHandler<GetCourseSubscriptionByIdQuery, Response<CourseSubscriptionResponse>>,
+        IRequestHandler<GetCoursesByStudentQuery, Response<IEnumerable<CourseSubscriptionDto>>>
     {
         private readonly ICourseSubscriptionService _service;
         private readonly IMapper _mapper;
@@ -32,6 +30,12 @@ namespace Project.Core.Features.CourseSubscriptions.Queries.Handlers
             if (item is null) return NotFound<CourseSubscriptionResponse>("CourseSubscription not found");
             var resp = new CourseSubscriptionResponse { Id = item.Id, StudentId = item.StudentId, CourseId = item.CourseId, Status = item.Status, CreatedAt = item.CreatedAt };
             return Success(resp);
+        }
+
+        public async Task<Response<IEnumerable<CourseSubscriptionDto>>> Handle(GetCoursesByStudentQuery request, CancellationToken cancellationToken)
+        {
+            var items = await _service.GetByStudentIdAsync(request.StudentId, cancellationToken);
+            return Success(items);
         }
     }
 }

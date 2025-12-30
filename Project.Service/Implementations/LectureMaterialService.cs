@@ -1,7 +1,4 @@
-using Microsoft.EntityFrameworkCore;
 using Project.Data.Entities.Content;
-using Project.Data.Interfaces;
-using Project.Service.Abstracts;
 
 namespace Project.Service.Implementations
 {
@@ -50,6 +47,19 @@ namespace Project.Service.Implementations
                 await _unitOfWork.LectureMaterials.Delete(entity);
                 await _unitOfWork.CompeleteAsync();
             }
+        }
+
+        public async Task<int> ChangeIsFreeLectureMaterialAsync(int lectureMaterialId, bool isFree, CancellationToken cancellationToken = default)
+        {
+            var entity = await _unitOfWork.LectureMaterials.GetByIdAsync(lectureMaterialId);
+            if (entity is null)
+            {
+                throw new KeyNotFoundException("LectureMaterial not found");
+            }
+            entity.IsFree = isFree;
+            _unitOfWork.LectureMaterials.Update(entity);
+            await _unitOfWork.CompeleteAsync();
+            return entity.Id;
         }
     }
 }

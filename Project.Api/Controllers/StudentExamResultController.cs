@@ -44,5 +44,20 @@ namespace Project.Api.Controllers
             var response = await Mediator.Send(request);
             return NewResult(response);
         }
+
+        [HttpPost(Router.ExamRouting.List + "/submit")]
+        public async Task<IActionResult> SubmitAnswers([FromBody] SubmitExamAnswersCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return NewResult(response);
+        }
+
+        [HttpGet(Router.ExamRouting.List + "/{examId}/students/{studentId}/score")]
+        public async Task<IActionResult> GetScore(int examId, int studentId)
+        {
+            var request = new GetStudentExamScoreQuery { ExamId = examId, StudentId = studentId };
+            var response = await Mediator.Send(request);
+            return NewResult(response);
+        }
     }
 }

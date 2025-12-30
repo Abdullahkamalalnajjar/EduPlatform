@@ -30,5 +30,6 @@ namespace Project.Core.Features.Teachers.Queries.Results
         public int Id { get; set; }
         public string Type { get; set; } = null!;
         public string FileUrl { get; set; } = null!;
+        public bool IsFree { get; set; }
     }
 }

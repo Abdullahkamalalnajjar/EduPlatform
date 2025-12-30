@@ -74,6 +74,12 @@ namespace Project.Api.Controllers
             var response = await Mediator.Send(command);
             return NewResult(response);
         }
+        [HttpPut(Router.LectureRouting.Edit + "/materials/isfree")]
+        public async Task<IActionResult> EditMaterialIsFree([FromBody] ChangeIsFreeLectureMaterialCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return NewResult(response);
+        }
 
         [HttpDelete(Router.LectureRouting.Delete + "/materials")]
         public async Task<IActionResult> DeleteMaterial(int id)
@@ -82,5 +88,6 @@ namespace Project.Api.Controllers
             var response = await Mediator.Send(request);
             return NewResult(response);
         }
+
     }
 }

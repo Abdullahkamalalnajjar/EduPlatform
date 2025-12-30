@@ -19,7 +19,22 @@ namespace Project.Core.Features.Exams.Queries.Handlers
         public async Task<Response<IEnumerable<QuestionResponse>>> Handle(GetAllQuestionsQuery request, CancellationToken cancellationToken)
         {
             var items = await _service.GetAllAsync(cancellationToken);
-            var result = items.Select(q => new QuestionResponse { Id = q.Id, QuestionType = q.QuestionType, Content = q.Content, AnswerType = q.AnswerType, Score = q.Score, ExamId = q.ExamId, OptionIds = q.Options.Select(o => o.Id) }).ToList();
+            var result = items.Select(
+                q => new QuestionResponse
+                {
+                    Id = q.Id,
+                    QuestionType = q.QuestionType,
+                    Content = q.Content,
+                    AnswerType = q.AnswerType,
+                    Score = q.Score,
+                    ExamId = q.ExamId,
+                    Options = q.Options.Select(o => new OptionResponse
+                    {
+                        Id = o.Id,
+                        Content = o.Content,
+                        IsCorrect = o.IsCorrect
+                    })
+                }).ToList();
             return Success<IEnumerable<QuestionResponse>>(result);
         }
 
@@ -27,7 +42,21 @@ namespace Project.Core.Features.Exams.Queries.Handlers
         {
             var item = await _service.GetByIdAsync(request.Id, cancellationToken);
             if (item is null) return NotFound<QuestionResponse>("Question not found");
-            var resp = new QuestionResponse { Id = item.Id, QuestionType = item.QuestionType, Content = item.Content, AnswerType = item.AnswerType, Score = item.Score, ExamId = item.ExamId, OptionIds = item.Options.Select(o => o.Id) };
+            var resp = new QuestionResponse
+            {
+                Id = item.Id,
+                QuestionType = item.QuestionType,
+                Content = item.Content,
+                AnswerType = item.AnswerType,
+                Score = item.Score,
+                ExamId = item.ExamId,
+                Options = item.Options.Select(o => new OptionResponse
+                {
+                    Id = o.Id,
+                    Content = o.Content,
+                    IsCorrect = o.IsCorrect
+                })
+            };
             return Success(resp);
         }
     }

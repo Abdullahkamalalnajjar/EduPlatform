@@ -37,7 +37,8 @@ namespace Project.Core.Features.Teachers.Queries.Handlers
                         {
                             Id = m.Id,
                             Type = m.Type,
-                            FileUrl = m.FileUrl
+                            FileUrl = m.FileUrl,
+                            IsFree = m.IsFree
                         }).ToList()
                     }).ToList()
                 }).ToList()

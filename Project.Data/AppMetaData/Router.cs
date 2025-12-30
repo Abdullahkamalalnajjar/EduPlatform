@@ -94,10 +94,10 @@
             public const string List = Prefix;
             public const string GetById = Prefix + "/" + IdSegment;
             public const string Create = Prefix;
-            // ✅ التعديل هنا
             public const string Edit = Prefix + "/Edit";
             public const string Delete = Prefix + "/" + IdSegment;
             public const string Paginated = Prefix + "/paginated";
+            public const string GetCoursesBySubject = Prefix + "/subject/" + IdSegment;
         }
 
         public static class LectureRouting
@@ -133,6 +133,8 @@
             public const string Edit = Prefix + "/" + IdSegment;
             public const string Delete = Prefix + "/" + IdSegment;
             public const string Paginated = Prefix + "/paginated";
+            public const string GetCoursesByStudent = Prefix + "/student/" + "studentId";
+
         }
 
         public static class AuthenticationRouting

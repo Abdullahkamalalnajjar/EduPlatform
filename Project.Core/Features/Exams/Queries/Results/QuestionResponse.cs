@@ -8,6 +8,12 @@ namespace Project.Core.Features.Exams.Queries.Results
         public string AnswerType { get; set; } = null!;
         public int Score { get; set; }
         public int ExamId { get; set; }
-        public IEnumerable<int> OptionIds { get; set; } = new List<int>();
+        public IEnumerable<OptionResponse> Options { get; set; } = new List<OptionResponse>();
+    }
+    public class OptionResponse
+    {
+        public int Id { get; set; }
+        public string Content { get; set; }
+        public bool IsCorrect { get; set; }
     }
 }

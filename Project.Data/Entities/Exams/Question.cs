@@ -8,7 +8,7 @@
         public string Content { get; set; } = null!;       // نص السؤال أو رابط صورة
         public string AnswerType { get; set; } = null!;   // MCQ / ImageAnswer / TextAnswer
         public int Score { get; set; }                     // الدرجة الخاصة بالسؤال
-
+        public bool CorrectByAssistant { get; set; } = false; // هل يتم تصحيح السؤال بمساعدة  
         public int ExamId { get; set; }
         public Exam Exam { get; set; } = null!;
 

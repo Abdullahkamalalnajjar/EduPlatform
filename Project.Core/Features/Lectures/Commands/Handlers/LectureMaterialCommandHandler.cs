@@ -6,7 +6,8 @@ namespace Project.Core.Features.Lectures.Commands.Handlers
     public class LectureMaterialCommandHandler : ResponseHandler,
         IRequestHandler<CreateLectureMaterialCommand, Response<int>>,
         IRequestHandler<EditLectureMaterialCommand, Response<int>>,
-        IRequestHandler<DeleteLectureMaterialCommand, Response<string>>
+        IRequestHandler<DeleteLectureMaterialCommand, Response<string>>,
+        IRequestHandler<ChangeIsFreeLectureMaterialCommand, Response<int>>
     {
         private readonly ILectureMaterialService _lectureMaterialService;
         private readonly IMapper _mapper;
@@ -41,6 +42,12 @@ namespace Project.Core.Features.Lectures.Commands.Handlers
             if (material is null) return NotFound<string>("Material not found");
             await _lectureMaterialService.DeleteAsync(request.Id, cancellationToken);
             return Success("Deleted");
+        }
+
+        public async Task<Response<int>> Handle(ChangeIsFreeLectureMaterialCommand request, CancellationToken cancellationToken)
+        {
+            var result = await _lectureMaterialService.ChangeIsFreeLectureMaterialAsync(request.LectureMaterialId, request.IsFree, cancellationToken);
+            return Success(request.LectureMaterialId);
         }
     }
 }

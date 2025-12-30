@@ -22,6 +22,13 @@ namespace Project.Api.Controllers
             var response = await Mediator.Send(request);
             return NewResult(response);
         }
+        [HttpGet(Router.CourseSubscriptionRouting.GetCoursesByStudent)]
+        public async Task<IActionResult> GetCoursesByStudent(int studentId)
+        {
+            var request = new GetCoursesByStudentQuery(studentId);
+            var response = await Mediator.Send(request);
+            return NewResult(response);
+        }
 
         [HttpPost(Router.CourseSubscriptionRouting.Create)]
         public async Task<IActionResult> Create([FromBody] CreateCourseSubscriptionCommand command)
@@ -38,8 +45,9 @@ namespace Project.Api.Controllers
         }
 
         [HttpPut(Router.CourseSubscriptionRouting.Edit + "/status")]
-        public async Task<IActionResult> ChangeStatus([FromBody] ChangeCourseSubscriptionStatusCommand command)
+        public async Task<IActionResult> ChangeStatus(int id, string status)
         {
+            var command = new ChangeCourseSubscriptionStatusCommand(id, status);
             var response = await Mediator.Send(command);
             return NewResult(response);
         }
@@ -51,5 +59,6 @@ namespace Project.Api.Controllers
             var response = await Mediator.Send(request);
             return NewResult(response);
         }
+
     }
 }
