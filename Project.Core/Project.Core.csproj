@@ -11,20 +11,42 @@
     <Compile Remove="Features\Patients\**" />
     <Compile Remove="Features\StoreItems\**" />
     <Compile Remove="Features\Stores\**" />
+    <Compile Remove="Features\Student\**" />
     <EmbeddedResource Remove="Features\Departments\**" />
     <EmbeddedResource Remove="Features\Patients\**" />
     <EmbeddedResource Remove="Features\StoreItems\**" />
     <EmbeddedResource Remove="Features\Stores\**" />
+    <EmbeddedResource Remove="Features\Student\**" />
     <None Remove="Features\Departments\**" />
     <None Remove="Features\Patients\**" />
     <None Remove="Features\StoreItems\**" />
     <None Remove="Features\Stores\**" />
+    <None Remove="Features\Student\**" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Features\Authentication\Command\Results\" />
     <Folder Include="Features\Authentication\Queries\" />
     <Folder Include="Features\Claims\Commands\" />
+    <Folder Include="Features\pepole\Parent\Command\Handler\" />
+    <Folder Include="Features\pepole\Parent\Command\models\" />
+    <Folder Include="Features\pepole\Parent\Queries\Handler\" />
+    <Folder Include="Features\pepole\Parent\Queries\models\" />
+    <Folder Include="Features\pepole\Parent\Queries\Ruselt\" />
+    <Folder Include="Features\pepole\Assistant\Command\Handler\" />
+    <Folder Include="Features\pepole\Assistant\Command\models\" />
+    <Folder Include="Features\pepole\Assistant\Queries\Handler\" />
+    <Folder Include="Features\pepole\Assistant\Queries\models\" />
+    <Folder Include="Features\pepole\Assistant\Queries\Ruselt\" />
+    <Folder Include="Features\pepole\Student\Command\Handler\" />
+    <Folder Include="Features\pepole\Student\Command\models\" />
+    <Folder Include="Features\pepole\Student\Queries\Handler\" />
+    <Folder Include="Features\pepole\Student\Queries\models\" />
+    <Folder Include="Features\pepole\Teacher\Command\models\" />
+    <Folder Include="Features\pepole\Teacher\Command\Handler\" />
+    <Folder Include="Features\pepole\Teacher\Queries\Handler\" />
+    <Folder Include="Features\pepole\Teacher\Queries\models\" />
+    <Folder Include="Features\pepole\Teacher\Queries\Ruselt\" />
     <Folder Include="Mapping\ApplicationUsers\Queries\" />
     <Folder Include="Mapping\Roles\Commands\" />
     <Folder Include="Mapping\Roles\Queries\" />

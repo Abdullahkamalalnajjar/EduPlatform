@@ -61,7 +61,7 @@
             public const string List = Prefix;
             public const string GetById = Prefix + "/" + IdSegment;
             public const string Create = Prefix;
-            public const string Edit = Prefix + "/" + IdSegment;
+            public const string Edit = Prefix + "/Edit";
             public const string Delete = Prefix + "/" + IdSegment;
             public const string Paginated = Prefix + "/paginated";
         }
@@ -94,7 +94,8 @@
             public const string List = Prefix;
             public const string GetById = Prefix + "/" + IdSegment;
             public const string Create = Prefix;
-            public const string Edit = Prefix + "/" + IdSegment;
+            // ✅ التعديل هنا
+            public const string Edit = Prefix + "/Edit";
             public const string Delete = Prefix + "/" + IdSegment;
             public const string Paginated = Prefix + "/paginated";
         }
@@ -105,7 +106,8 @@
             public const string List = Prefix;
             public const string GetById = Prefix + "/" + IdSegment;
             public const string Create = Prefix;
-            public const string Edit = Prefix + "/" + IdSegment;
+            // public const string Edit = Prefix + "/" + IdSegment;
+            public const string Edit = Prefix + "/Edit";
             public const string Delete = Prefix + "/" + IdSegment;
             public const string Paginated = Prefix + "/paginated";
         }
@@ -116,7 +118,8 @@
             public const string List = Prefix;
             public const string GetById = Prefix + "/" + IdSegment;
             public const string Create = Prefix;
-            public const string Edit = Prefix + "/" + IdSegment;
+            // public const string Edit = Prefix + "/" + IdSegment;
+            public const string Edit = Prefix + "/Edit";
             public const string Delete = Prefix + "/" + IdSegment;
             public const string Paginated = Prefix + "/paginated";
         }

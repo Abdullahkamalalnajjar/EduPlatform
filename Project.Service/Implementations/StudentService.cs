@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Project.Data.Entities.People;
 using Project.Data.Interfaces;
 using Project.Service.Abstracts;
-
 namespace Project.Service.Implementations
 {
+    // se7a
     public class StudentService : IStudentService
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -37,6 +37,7 @@ namespace Project.Service.Implementations
             return entity;
         }
 
+ 
         public async Task<Student> UpdateAsync(Student entity, CancellationToken cancellationToken = default)
         {
             _unitOfWork.Students.Update(entity);
@@ -53,5 +54,7 @@ namespace Project.Service.Implementations
                 await _unitOfWork.CompeleteAsync();
             }
         }
+
+     
     }
 }
