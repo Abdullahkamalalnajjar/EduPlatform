@@ -6,7 +6,6 @@ using Project.Data.AppMetaData;
 
 namespace Project.Api.Controllers
 {
-    [ApiController]
     public class LectureController : AppBaseController
     {
         [HttpGet(Router.LectureRouting.List)]

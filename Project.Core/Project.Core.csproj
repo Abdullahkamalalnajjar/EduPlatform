@@ -49,7 +49,6 @@
     <Folder Include="Features\pepole\Teacher\Queries\Ruselt\" />
     <Folder Include="Mapping\ApplicationUsers\Queries\" />
     <Folder Include="Mapping\Roles\Commands\" />
-    <Folder Include="Mapping\Roles\Queries\" />
   </ItemGroup>
 
   <ItemGroup>
