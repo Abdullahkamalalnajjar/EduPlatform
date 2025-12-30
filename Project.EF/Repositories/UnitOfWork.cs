@@ -1,4 +1,11 @@
-﻿namespace Project.EF.Repositories
+﻿using Project.Data.Entities.People;
+using Project.Data.Entities.Curriculum;
+using Project.Data.Entities.Subscriptions;
+using Project.Data.Entities.Content;
+using Project.Data.Entities.Exams;
+using Project.Data.Interfaces;
+
+namespace Project.EF.Repositories
 {
     public class UnitOfWork : IUnitOfWork
     {
@@ -24,7 +31,7 @@
         public IStudentExamResultRepository StudentExamResults { get; private set; }
 
         public ITeacherEducationStageRepository TeacherEducationStages { get; private set; }
-
+        public IEducationStageRepository EducationStages { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -50,6 +57,7 @@
             StudentExamResults = new StudentExamResultRepository(_context);
 
             TeacherEducationStages = new TeacherEducationStageRepository(_context);
+            EducationStages = new EducationStageRepository(_context);
         }
         public async Task<int> CompeleteAsync()
         {

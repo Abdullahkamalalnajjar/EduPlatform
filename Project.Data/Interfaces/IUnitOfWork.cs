@@ -29,6 +29,7 @@ namespace Project.Data.Interfaces
         IStudentExamResultRepository StudentExamResults { get; }
 
         ITeacherEducationStageRepository TeacherEducationStages { get; }
+        IEducationStageRepository EducationStages { get; }
 
         Task<int> CompeleteAsync();
         Task<IDbContextTransaction> BeginTransactionAsync();

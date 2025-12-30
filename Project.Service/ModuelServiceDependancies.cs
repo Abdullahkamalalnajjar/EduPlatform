@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Project.Service.Abstracts;
-using Project.Service.Implementations;
 
 namespace Project.Service
 {
@@ -35,6 +33,7 @@ namespace Project.Service
             services.AddTransient<IQuestionService, QuestionService>();
             services.AddTransient<IQuestionOptionService, QuestionOptionService>();
             services.AddTransient<IStudentExamResultService, StudentExamResultService>();
+
 
             return services;
         }

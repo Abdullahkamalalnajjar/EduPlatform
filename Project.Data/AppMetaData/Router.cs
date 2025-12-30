@@ -161,5 +161,12 @@
             public const string UpdateRole = Prefix + "/update-role";
             public const string UpdateClaims = Prefix + "/update-claims";
         }
+
+        public static class EducationStageRouting
+        {
+            private const string Prefix = Rule + "/education-stages";
+            public const string List = Prefix;
+            public const string GetById = Prefix + "/" + IdSegment;
+        }
     }
 }
