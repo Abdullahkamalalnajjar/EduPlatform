@@ -3,6 +3,7 @@ using Project.Api.Base;
 using Project.Core.Features.Lectures.Commands.Models;
 using Project.Core.Features.Lectures.Queries.Models;
 using Project.Data.AppMetaData;
+using Project.Service.Abstracts;
 
 namespace Project.Api.Controllers
 {
@@ -61,11 +62,46 @@ namespace Project.Api.Controllers
             return NewResult(response);
         }
 
+        // Accept multipart/form-data for file uploads or a URL for videos
         [HttpPost(Router.LectureRouting.Create + "/materials")]
-        public async Task<IActionResult> CreateMaterial([FromBody] CreateLectureMaterialCommand command)
+        public async Task<IActionResult> CreateMaterial([FromForm] string type, [FromForm] int lectureId, IFormFile? file, [FromForm] string? videoUrl, [FromForm] bool isFree = false)
         {
-            var response = await Mediator.Send(command);
-            return NewResult(response);
+            // Video type expects a URL
+            if (string.Equals(type, "video", StringComparison.OrdinalIgnoreCase))
+            {
+                if (string.IsNullOrWhiteSpace(videoUrl))
+                {
+                    return BadRequest(new { Succeeded = false, Message = "Video materials require a fileUrl (video URL)." });
+                }
+
+                var cmd = new CreateLectureMaterialCommand { Type = type, VideoUrl = videoUrl, LectureId = lectureId, IsFree = isFree };
+                var response = await Mediator.Send(cmd);
+                return NewResult(response);
+            }
+
+            // For images or pdfs require a file upload
+            if (file is null)
+            {
+                return BadRequest(new { Succeeded = false, Message = "File is required for non-video material types." });
+            }
+
+            var fileService = HttpContext.RequestServices.GetService<IFileService>();
+            if (fileService is null)
+            {
+                return BadRequest(new { Succeeded = false, Message = "File service not available." });
+            }
+
+            // choose location folder name
+            var location = "uploads/lectures";
+            var uploadedUrl = await fileService.UploadFile(location, file);
+            if (string.IsNullOrEmpty(uploadedUrl) || uploadedUrl == "FailedToUploadImage" || uploadedUrl == "NoImage" || uploadedUrl == "InvalidFileType")
+            {
+                return BadRequest(new { Succeeded = false, Message = "Failed to upload file or invalid file type." });
+            }
+
+            var command = new CreateLectureMaterialCommand { Type = type, VideoUrl = uploadedUrl, LectureId = lectureId, IsFree = isFree };
+            var resp = await Mediator.Send(command);
+            return NewResult(resp);
         }
 
         [HttpPut(Router.LectureRouting.Edit + "/materials")]

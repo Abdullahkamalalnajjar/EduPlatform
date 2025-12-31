@@ -10,16 +10,34 @@ namespace Project.Core.Features.Lectures.Commands.Handlers
     {
         private readonly ILectureMaterialService _lectureMaterialService;
         private readonly IMapper _mapper;
+        private readonly IFileService _fileService;
 
-        public LectureMaterialCommandHandler(ILectureMaterialService lectureMaterialService, IMapper mapper)
+        public LectureMaterialCommandHandler(ILectureMaterialService lectureMaterialService, IMapper mapper, IFileService fileService)
         {
             _lectureMaterialService = lectureMaterialService;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
         public async Task<Response<int>> Handle(CreateLectureMaterialCommand request, CancellationToken cancellationToken)
         {
-            var material = new LectureMaterial { Type = request.Type, FileUrl = request.FileUrl, LectureId = request.LectureId };
+            string fileUrl = request.VideoUrl;
+
+            // If material is not a video and a file is provided, upload it
+            if (!string.Equals(request.Type, "video", StringComparison.OrdinalIgnoreCase) && request.File is not null)
+            {
+                // reuse existing UploadImage method for saving pdf or image
+                var location = "uploads/lectures";
+                var uploadResult = await _fileService.UploadImage(location, request.File);
+                if (string.IsNullOrEmpty(uploadResult) || uploadResult == "FailedToUploadImage" || uploadResult == "NoImage")
+                {
+                    return BadRequest<int>("Failed to upload file");
+                }
+
+                fileUrl = uploadResult;
+            }
+
+            var material = new LectureMaterial { Type = request.Type, FileUrl = fileUrl, LectureId = request.LectureId, IsFree = request.IsFree };
             var created = await _lectureMaterialService.CreateAsync(material, cancellationToken);
             return Success(created.Id);
         }
@@ -31,6 +49,7 @@ namespace Project.Core.Features.Lectures.Commands.Handlers
             material.Type = request.Type;
             material.FileUrl = request.FileUrl;
             material.LectureId = request.LectureId;
+            material.IsFree = request.IsFree;
             var updated = await _lectureMaterialService.UpdateAsync(material, cancellationToken);
             return Success(updated.Id);
         }

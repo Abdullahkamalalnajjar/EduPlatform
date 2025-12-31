@@ -23,6 +23,14 @@ namespace Project.Api.Controllers
             return NewResult(response);
         }
 
+        [HttpGet(Router.CourseRouting.GetByTeacher)]
+        public async Task<IActionResult> GetByTeacher(int teacherId)
+        {
+            var request = new GetCoursesByTeacherQuery { TeacherId = teacherId };
+            var response = await Mediator.Send(request);
+            return NewResult(response);
+        }
+
         [HttpPost(Router.CourseRouting.Create)]
         public async Task<IActionResult> Create([FromBody] CreateCourseCommand command)
         {

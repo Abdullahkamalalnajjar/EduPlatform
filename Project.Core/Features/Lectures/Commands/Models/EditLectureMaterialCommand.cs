@@ -6,5 +6,6 @@ namespace Project.Core.Features.Lectures.Commands.Models
         public string Type { get; set; } = null!;
         public string FileUrl { get; set; } = null!;
         public int LectureId { get; set; }
+        public bool IsFree { get; set; } = false;
     }
 }

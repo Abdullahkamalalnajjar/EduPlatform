@@ -21,19 +21,20 @@ namespace Project.Core.Features.Teachers.Queries.Handlers
             {
                 Id = t.Id,
                 UserId = t.ApplicationUserId,
+                ApplicationUserId = t.ApplicationUserId,
                 FullName = t.User.FullName,
                 SubjectId = t.SubjectId,
                 SubjectName = t.Subject.Name,
-                Courses = t.Courses.Select(c => new CourseDto
+                Courses = t.Courses.Select(c => new CourseDtoo
                 {
                     Id = c.Id,
                     Title = c.Title,
                     GradeYear = c.GradeYear,
-                    Lectures = c.Lectures.Select(l => new LectureDto
+                    Lectures = c.Lectures.Select(l => new LectureDtoo
                     {
                         Id = l.Id,
                         Title = l.Title,
-                        Materials = l.Materials.Select(m => new MaterialDto
+                        Materials = l.Materials.Select(m => new MaterialDtoo
                         {
                             Id = m.Id,
                             Type = m.Type,

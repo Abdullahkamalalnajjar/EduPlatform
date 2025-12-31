@@ -1,7 +1,4 @@
-using Microsoft.EntityFrameworkCore;
 using Project.Data.Entities.Curriculum;
-using Project.Data.Interfaces;
-using Project.Service.Abstracts;
 
 namespace Project.Service.Implementations
 {
@@ -52,6 +49,35 @@ namespace Project.Service.Implementations
                 await _unitOfWork.Courses.Delete(entity);
                 await _unitOfWork.CompeleteAsync();
             }
+        }
+
+        public async Task<IEnumerable<CourseDto>> GetByTeacherIdAsync(int teacherId, CancellationToken cancellationToken = default)
+        {
+            return await _unitOfWork.Courses.GetTableNoTracking()
+
+                .Where(c => c.TeacherId == teacherId)
+                .Select(c => new CourseDto
+                {
+                    Id = c.Id,
+                    Title = c.Title,
+                    GradeYear = c.GradeYear,
+                    TeacherId = c.TeacherId,
+                    TeacherName = c.Teacher.User.FullName,
+                    Lectures = c.Lectures.Select(l => new LectureDto
+                    {
+                        Id = l.Id,
+                        Title = l.Title,
+                        Materials = l.Materials.Select(m => new MaterialDto
+                        {
+                            Id = m.Id,
+                            Type = m.Type,
+                            FileUrl = m.FileUrl,
+                            IsFree = m.IsFree
+                        }).ToList()
+                    }).ToList()
+
+                })
+                .ToListAsync(cancellationToken);
         }
     }
 }

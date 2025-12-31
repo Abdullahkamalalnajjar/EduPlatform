@@ -4,28 +4,29 @@ namespace Project.Core.Features.Teachers.Queries.Results
     {
         public int Id { get; set; }
         public string UserId { get; set; } = null!;
+        public string ApplicationUserId { get; set; } = null!;
         public string FullName { get; set; } = null!;
         public int SubjectId { get; set; }
         public string SubjectName { get; set; } = null!;
-        public List<CourseDto> Courses { get; set; } = new();
+        public List<CourseDtoo> Courses { get; set; } = new();
     }
 
-    public class CourseDto
+    public class CourseDtoo
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
         public int GradeYear { get; set; }
-        public List<LectureDto> Lectures { get; set; } = new();
+        public List<LectureDtoo> Lectures { get; set; } = new();
     }
 
-    public class LectureDto
+    public class LectureDtoo
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
-        public List<MaterialDto> Materials { get; set; } = new();
+        public List<MaterialDtoo> Materials { get; set; } = new();
     }
 
-    public class MaterialDto
+    public class MaterialDtoo
     {
         public int Id { get; set; }
         public string Type { get; set; } = null!;

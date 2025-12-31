@@ -11,6 +11,8 @@
         int TokenExpiresIn,
         string? RefreshToken,
         DateTime RefreshTokenExpiresIn,
-        IEnumerable<string> Roles
+        IEnumerable<string> Roles,
+        string ApplicationUserId,
+        int? UserId
  );
 }

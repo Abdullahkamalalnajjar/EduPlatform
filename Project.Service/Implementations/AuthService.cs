@@ -46,6 +46,15 @@ namespace Project.Service.Implementations
 
             await _userManager.UpdateAsync(user);
 
+            // determine numeric profile id if exists
+            int? profileId = null;
+            var teacherId = await _context.Teachers.Where(t => t.ApplicationUserId == user.Id).Select(t => (int?)t.Id).FirstOrDefaultAsync(cancellationToken);
+            var studentId = await _context.Students.Where(s => s.ApplicationUserId == user.Id).Select(s => (int?)s.Id).FirstOrDefaultAsync(cancellationToken);
+            var parentId = await _context.Parents.Where(p => p.ApplicationUserId == user.Id).Select(p => (int?)p.Id).FirstOrDefaultAsync(cancellationToken);
+            var assistantId = await _context.Assistants.Where(a => a.ApplicationUserId == user.Id).Select(a => (int?)a.Id).FirstOrDefaultAsync(cancellationToken);
+
+            profileId = teacherId ?? studentId ?? parentId ?? assistantId;
+
             var response = new AuthResponse(
                 Id: user.Id,
                 Email: user.Email,
@@ -56,7 +65,9 @@ namespace Project.Service.Implementations
                 TokenExpiresIn: expiresIn,
                 RefreshToken: refreshToken,
                 RefreshTokenExpiresIn: refreshTokenExpiresIn,
-                Roles: userRoles
+                Roles: userRoles,
+                ApplicationUserId: user.Id,
+                UserId: profileId
             );
 
             return AuthResult.Success(response);
@@ -89,19 +100,31 @@ namespace Project.Service.Implementations
             });
             // update the user
             await _userManager.UpdateAsync(user);
+
+            // determine numeric profile id if exists
+            int? profileId = null;
+            var teacherId = await _context.Teachers.Where(t => t.ApplicationUserId == user.Id).Select(t => (int?)t.Id).FirstOrDefaultAsync(cancellationToken);
+            var studentId = await _context.Students.Where(s => s.ApplicationUserId == user.Id).Select(s => (int?)s.Id).FirstOrDefaultAsync(cancellationToken);
+            var parentId = await _context.Parents.Where(p => p.ApplicationUserId == user.Id).Select(p => (int?)p.Id).FirstOrDefaultAsync(cancellationToken);
+            var assistantId = await _context.Assistants.Where(a => a.ApplicationUserId == user.Id).Select(a => (int?)a.Id).FirstOrDefaultAsync(cancellationToken);
+
+            profileId = teacherId ?? studentId ?? parentId ?? assistantId;
+
             // return the response
-            var response = new AuthResponse(Id: user.Id,
+            var response = new AuthResponse(
+                Id: user.Id,
                 Email: user.Email,
                 FirstName: user.FirstName,
                 LastName: user.LastName,
                 Token: newToken,
                 IsDisable: user.IsDisable,
-
                 TokenExpiresIn: expiresIn,
                 RefreshToken: newRefreshToken,
                 RefreshTokenExpiresIn: newRefreshTokenExpiresIn,
-                Roles: userRoles
-                );
+                Roles: userRoles,
+                ApplicationUserId: user.Id,
+                UserId: profileId
+            );
             return response;
 
         }

@@ -1,4 +1,8 @@
-﻿
+﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Project.Service.Implementations
 {
@@ -54,6 +58,19 @@ namespace Project.Service.Implementations
             {
                 return "NoImage";
             }
+        }
+
+        public async Task<string> UploadFile(string Location, IFormFile file)
+        {
+            if (file is null) return "NoFile";
+
+            var allowed = new[] { ".pdf", ".png", ".jpg", ".jpeg", ".gif", ".bmp" };
+            var extension = Path.GetExtension(file.FileName)?.ToLowerInvariant();
+            if (string.IsNullOrEmpty(extension) || !allowed.Contains(extension))
+                return "InvalidFileType";
+
+            // reuse UploadImage logic to save file
+            return await UploadImage(Location, file);
         }
         #endregion
     }
