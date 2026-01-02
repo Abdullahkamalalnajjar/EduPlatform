@@ -58,7 +58,7 @@ namespace Project.Service.Implementations
             return await _unitOfWork.Teachers.GetTableNoTracking()
                 .Include(t => t.User)
                 .Include(t => t.Courses)
-                .Where(t => t.Subject.Id == subjectId && t.Courses.Any(c => c.GradeYear == gradeYear))
+                .Where(t => t.Subject.Id == subjectId)
                 .ToListAsync(cancellationToken);
         }
 

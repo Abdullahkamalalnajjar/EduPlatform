@@ -4,7 +4,8 @@ namespace Project.Core.Features.Courses.Queries.Results
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
-        public int GradeYear { get; set; }
         public int TeacherId { get; set; }
+        public int EducationStageId { get; set; }
+        public string EducationStageName { get; set; } = null!;
     }
 }

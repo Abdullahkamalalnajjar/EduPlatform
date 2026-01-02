@@ -32,7 +32,7 @@ namespace Project.Core.Features.Teachers.Queries.Handlers
                 {
                     Id = c.Id,
                     Title = c.Title,
-                    GradeYear = c.GradeYear,
+                    EducationStageName = c.EducationStage.Name,
                     Lectures = c.Lectures.Select(l => new LectureDtoo
                     {
                         Id = l.Id,

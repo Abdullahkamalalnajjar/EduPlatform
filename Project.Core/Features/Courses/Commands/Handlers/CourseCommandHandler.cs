@@ -1,7 +1,4 @@
-using AutoMapper;
-using MediatR;
 using Project.Core.Features.Courses.Commands.Models;
-using Project.Service.Abstracts;
 using Project.Data.Entities.Curriculum;
 
 namespace Project.Core.Features.Courses.Commands.Handlers
@@ -12,17 +9,35 @@ namespace Project.Core.Features.Courses.Commands.Handlers
         IRequestHandler<DeleteCourseCommand, Response<string>>
     {
         private readonly ICourseService _courseService;
+        private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public CourseCommandHandler(ICourseService courseService, IMapper mapper)
+        public CourseCommandHandler(ICourseService courseService, IFileService fileService, IMapper mapper)
         {
             _courseService = courseService;
+            _fileService = fileService;
             _mapper = mapper;
         }
 
         public async Task<Response<int>> Handle(CreateCourseCommand request, CancellationToken cancellationToken)
         {
-            var course = new Course { Title = request.Title, GradeYear = request.GradeYear, TeacherId = request.TeacherId };
+            var imageUrl = string.Empty;
+            if (request.CourseImageUrl != null)
+            {
+                imageUrl = await _fileService.UploadImage("courses", request.CourseImageUrl);
+                if (string.IsNullOrWhiteSpace(imageUrl) || imageUrl == "FailedToUploadImage" || imageUrl == "NoImage")
+                {
+                    return BadRequest<int>("Failed to upload course image");
+                }
+            }
+
+            var course = new Course
+            {
+                Title = request.Title,
+                TeacherId = request.TeacherId,
+                EducationStageId = request.EducationStageId,
+                CourseImageUrl = imageUrl
+            };
             var created = await _courseService.CreateAsync(course, cancellationToken);
             return Success(created.Id);
         }
@@ -31,9 +46,20 @@ namespace Project.Core.Features.Courses.Commands.Handlers
         {
             var course = await _courseService.GetByIdAsync(request.Id, cancellationToken);
             if (course is null) return NotFound<int>("Course not found");
+
+            if (request.CourseImageUrl != null)
+            {
+                var imageUrl = await _fileService.UploadImage("courses", request.CourseImageUrl);
+                if (string.IsNullOrWhiteSpace(imageUrl) || imageUrl == "FailedToUploadImage" || imageUrl == "NoImage")
+                {
+                    return BadRequest<int>("Failed to upload course image");
+                }
+                course.CourseImageUrl = imageUrl;
+            }
+
             course.Title = request.Title;
-            course.GradeYear = request.GradeYear;
             course.TeacherId = request.TeacherId;
+            course.EducationStageId = request.EducationStageId;
             var updated = await _courseService.UpdateAsync(course, cancellationToken);
             return Success(updated.Id);
         }

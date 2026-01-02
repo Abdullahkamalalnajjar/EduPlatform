@@ -1,6 +1,5 @@
 using Project.Core.Features.Teachers.Queries.Models;
 using Project.Core.Features.Teachers.Queries.Results;
-using Project.Data.Interfaces;
 
 namespace Project.Core.Features.Teachers.Queries.Handlers
 {
@@ -23,7 +22,13 @@ namespace Project.Core.Features.Teachers.Queries.Handlers
                 .Where(ts => ts.TeacherId == request.TeacherId)
                 .ToListAsync(cancellationToken);
 
-            var result = items.Select(i => new TeacherByGradeSubjectResponse { Id = i.TeacherId, UserId = i.Teacher.ApplicationUserId, FullName = i.Teacher.User.FullName, SubjectId = i.Teacher.SubjectId }).ToList();
+            var result = items.Select(i => new TeacherByGradeSubjectResponse
+            {
+                Id = i.TeacherId,
+                UserId = i.Teacher.ApplicationUserId,
+                FullName = i.Teacher.User.FullName,
+                SubjectId = i.Teacher.SubjectId
+            }).ToList();
             return Success<IEnumerable<TeacherByGradeSubjectResponse>>(result);
         }
     }

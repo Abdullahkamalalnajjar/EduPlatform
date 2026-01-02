@@ -26,6 +26,7 @@ namespace Project.Core.Features.Exams.Queries.Handlers
                 .Select(e => new ExamResponse
                 {
                     Id = e.Id,
+                    Title = e.Title,
                     LectureId = e.LectureId,
                     LectureName = e.Lecture.Title,
 
@@ -57,6 +58,7 @@ namespace Project.Core.Features.Exams.Queries.Handlers
             var resp = new ExamResponse
             {
                 Id = item.Id,
+                Title = item.Title,
                 LectureId = item.LectureId,
                 LectureName = item.Lecture.Title,
                 Questions = item.Questions.Select(q => new QuestionResponse
@@ -83,11 +85,12 @@ namespace Project.Core.Features.Exams.Queries.Handlers
 
         public async Task<Response<ExamResponse>> Handle(GetExamByLectureIdQuery request, CancellationToken cancellationToken)
         {
-            var item = (await _service.GetAllAsync(cancellationToken)).SingleOrDefault(e => e.LectureId == request.LectureId);
+            var item = (await _service.GetAllAsync(cancellationToken)).FirstOrDefault(e => e.LectureId == request.LectureId);
             if (item is null) return NotFound<ExamResponse>("Exam not found for lecture");
             var resp = new ExamResponse
             {
                 Id = item.Id,
+                Title = item.Title,
                 LectureId = item.LectureId,
                 LectureName = item.Lecture.Title,
                 Questions = item.Questions.Select(q => new QuestionResponse

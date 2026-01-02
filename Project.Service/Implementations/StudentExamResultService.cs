@@ -76,9 +76,19 @@ namespace Project.Service.Implementations
                 // handle MCQ by comparing selected option ids to correct option ids
                 if (string.Equals(question.AnswerType, "MCQ", StringComparison.OrdinalIgnoreCase))
                 {
-                    var correctOptionIds = question.Options.Where(o => o.IsCorrect).Select(o => o.Id).OrderBy(i => i).ToList();
-                    var selected = studentAnswer.SelectedOptionIds.OrderBy(i => i).ToList();
-                    if (correctOptionIds.SequenceEqual(selected))
+                    var correctOptionIds = question.Options
+                        .Where(o => o.IsCorrect)
+                        .Select(o => o.Id)
+                        .OrderBy(i => i)
+                        .ToList();
+                    
+                    var selectedOptionIds = studentAnswer.SelectedOptionIds
+                        .OrderBy(i => i)
+                        .ToList();
+
+                    // Check if selected options match correct options exactly
+                    if (correctOptionIds.Count == selectedOptionIds.Count && 
+                        correctOptionIds.SequenceEqual(selectedOptionIds))
                     {
                         total += question.Score;
                     }

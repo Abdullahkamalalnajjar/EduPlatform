@@ -1,9 +1,5 @@
-using AutoMapper;
-using MediatR;
 using Project.Core.Features.Questions.Commands.Models;
-using Project.Service.Abstracts;
 using Project.Data.Entities.Exams;
-using Microsoft.AspNetCore.Http;
 
 namespace Project.Core.Features.Questions.Commands.Handlers
 {
@@ -13,12 +9,14 @@ namespace Project.Core.Features.Questions.Commands.Handlers
         IRequestHandler<DeleteQuestionCommand, Response<string>>
     {
         private readonly IQuestionService _service;
+        private readonly IQuestionOptionService _optionService;
         private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public QuestionCommandHandler(IQuestionService service, IFileService fileService, IMapper mapper)
+        public QuestionCommandHandler(IQuestionService service, IQuestionOptionService optionService, IFileService fileService, IMapper mapper)
         {
             _service = service;
+            _optionService = optionService;
             _fileService = fileService;
             _mapper = mapper;
         }
@@ -36,8 +34,17 @@ namespace Project.Core.Features.Questions.Commands.Handlers
                 request.Content = url;
             }
 
-            var entity = new Question { QuestionType = request.QuestionType, Content = request.Content, AnswerType = request.AnswerType, Score = request.Score, ExamId = request.ExamId };
+            var entity = new Question
+            {
+                QuestionType = request.QuestionType,
+                Content = request.Content,
+                AnswerType = request.AnswerType,
+                Score = request.Score,
+                ExamId = request.ExamId,
+                CorrectByAssistant = request.CorrectByAssistant
+            };
             var created = await _service.CreateAsync(entity, cancellationToken);
+
             return Success(created.Id);
         }
 

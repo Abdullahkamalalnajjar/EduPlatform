@@ -20,7 +20,7 @@ namespace Project.Core.Features.Courses.Queries.Handlers
         public async Task<Response<IEnumerable<CourseResponse>>> Handle(GetAllCoursesQuery request, CancellationToken cancellationToken)
         {
             var courses = await _courseService.GetAllAsync(cancellationToken);
-            var result = courses.Select(c => new CourseResponse { Id = c.Id, Title = c.Title, GradeYear = c.GradeYear, TeacherId = c.TeacherId }).ToList();
+            var result = courses.Select(c => new CourseResponse { Id = c.Id, Title = c.Title, EducationStageName = c.EducationStage.Name, TeacherId = c.TeacherId, EducationStageId = c.EducationStageId }).ToList();
             return Success<IEnumerable<CourseResponse>>(result);
         }
 
@@ -28,7 +28,7 @@ namespace Project.Core.Features.Courses.Queries.Handlers
         {
             var course = await _courseService.GetByIdAsync(request.Id, cancellationToken);
             if (course is null) return NotFound<CourseResponse>("Course not found");
-            var resp = new CourseResponse { Id = course.Id, Title = course.Title, GradeYear = course.GradeYear, TeacherId = course.TeacherId };
+            var resp = new CourseResponse { Id = course.Id, Title = course.Title, EducationStageName = course.EducationStage.Name, TeacherId = course.TeacherId, EducationStageId = course.EducationStageId };
             return Success(resp);
         }
 

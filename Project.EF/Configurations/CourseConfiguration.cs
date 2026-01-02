@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Project.Data.Entities.Curriculum;
 
 namespace Project.EF.Configurations
@@ -21,6 +19,11 @@ namespace Project.EF.Configurations
                 .WithOne(l => l.Course)
                 .HasForeignKey(l => l.CourseId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(x => x.EducationStage)
+                .WithMany()
+                .HasForeignKey(x => x.EducationStageId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

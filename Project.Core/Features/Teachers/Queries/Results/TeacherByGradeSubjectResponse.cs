@@ -19,7 +19,7 @@ namespace Project.Core.Features.Teachers.Queries.Results
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
-        public int GradeYear { get; set; }
+        public string EducationStageName { get; set; } = null!;
         public List<LectureDtoo> Lectures { get; set; } = new();
     }
 

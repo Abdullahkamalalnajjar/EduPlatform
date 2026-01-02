@@ -32,14 +32,14 @@ namespace Project.Api.Controllers
         }
 
         [HttpPost(Router.CourseRouting.Create)]
-        public async Task<IActionResult> Create([FromBody] CreateCourseCommand command)
+        public async Task<IActionResult> Create([FromForm] CreateCourseCommand command)
         {
             var response = await Mediator.Send(command);
             return NewResult(response);
         }
 
         [HttpPut(Router.CourseRouting.Edit)]
-        public async Task<IActionResult> Edit([FromBody] EditCourseCommand command)
+        public async Task<IActionResult> Edit([FromForm] EditCourseCommand command)
         {
             var response = await Mediator.Send(command);
             return NewResult(response);

@@ -4,7 +4,10 @@ namespace Project.Data.Entities.Curriculum
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
-        public int GradeYear { get; set; }
+        public int EducationStageId { get; set; }
+        public EducationStage EducationStage { get; set; } = null!;
+
+        public string CourseImageUrl { get; set; } = null!;
 
         public int TeacherId { get; set; }
         public Project.Data.Entities.People.Teacher Teacher { get; set; } = null!;

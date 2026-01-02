@@ -27,7 +27,7 @@ namespace Project.Core.Features.Exams.Commands.Handlers
             var lecture = await _lectureService.GetByIdAsync(request.LectureId, cancellationToken);
             if (lecture is null) return NotFound<int>("Lecture not found");
 
-            var entity = new Exam { LectureId = request.LectureId };
+            var entity = new Exam { Title = request.Title, LectureId = request.LectureId };
             var created = await _service.CreateAsync(entity, cancellationToken);
             return Success(created.Id);
         }
@@ -40,6 +40,7 @@ namespace Project.Core.Features.Exams.Commands.Handlers
             var lecture = await _lectureService.GetByIdAsync(request.LectureId, cancellationToken);
             if (lecture is null) return NotFound<int>("Lecture not found");
 
+            entity.Title = request.Title;
             entity.LectureId = request.LectureId;
             var updated = await _service.UpdateAsync(entity, cancellationToken);
             return Success(updated.Id);

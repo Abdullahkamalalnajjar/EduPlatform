@@ -24,6 +24,7 @@ namespace Project.Service.Implementations
             return await _unitOfWork.Courses.GetTableNoTracking()
                 .Include(c => c.Teacher)
                 .Include(c => c.Lectures)
+                .Include(e => e.EducationStage)
                 .SingleOrDefaultAsync(c => c.Id == id, cancellationToken);
         }
 
@@ -54,15 +55,16 @@ namespace Project.Service.Implementations
         public async Task<IEnumerable<CourseDto>> GetByTeacherIdAsync(int teacherId, CancellationToken cancellationToken = default)
         {
             return await _unitOfWork.Courses.GetTableNoTracking()
-
                 .Where(c => c.TeacherId == teacherId)
                 .Select(c => new CourseDto
                 {
                     Id = c.Id,
                     Title = c.Title,
-                    GradeYear = c.GradeYear,
                     TeacherId = c.TeacherId,
                     TeacherName = c.Teacher.User.FullName,
+                    EducationStageId = c.EducationStageId,
+                    EducationStageName = c.EducationStage.Name,
+                    CourseImageUrl = c.CourseImageUrl,
                     Lectures = c.Lectures.Select(l => new LectureDto
                     {
                         Id = l.Id,
@@ -71,6 +73,7 @@ namespace Project.Service.Implementations
                         {
                             Id = m.Id,
                             Type = m.Type,
+                            Title = m.Title,
                             FileUrl = m.FileUrl,
                             IsFree = m.IsFree
                         }).ToList()

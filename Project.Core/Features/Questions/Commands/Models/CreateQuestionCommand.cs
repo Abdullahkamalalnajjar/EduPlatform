@@ -1,7 +1,3 @@
-using MediatR;
-using Project.Core.Bases;
-using Microsoft.AspNetCore.Http;
-
 namespace Project.Core.Features.Questions.Commands.Models
 {
     public class CreateQuestionCommand : IRequest<Response<int>>
@@ -12,6 +8,8 @@ namespace Project.Core.Features.Questions.Commands.Models
         public IFormFile? File { get; set; }
         public string AnswerType { get; set; } = null!;
         public int Score { get; set; }
+        public bool CorrectByAssistant { get; set; } = false;
         public int ExamId { get; set; }
     }
+
 }
