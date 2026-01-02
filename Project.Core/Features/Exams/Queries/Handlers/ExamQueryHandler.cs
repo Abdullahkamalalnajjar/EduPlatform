@@ -7,7 +7,8 @@ namespace Project.Core.Features.Exams.Queries.Handlers
 {
     public class ExamQueryHandler : ResponseHandler,
         IRequestHandler<GetAllExamsQuery, Response<IEnumerable<ExamResponse>>>,
-        IRequestHandler<GetExamByIdQuery, Response<ExamResponse>>
+        IRequestHandler<GetExamByIdQuery, Response<ExamResponse>>,
+        IRequestHandler<GetExamByLectureIdQuery, Response<ExamResponse>>
     {
         private readonly IExamService _service;
         private readonly IMapper _mapper;
@@ -76,6 +77,35 @@ namespace Project.Core.Features.Exams.Queries.Handlers
                     }).ToList()
                 }
                  )
+            };
+            return Success(resp);
+        }
+
+        public async Task<Response<ExamResponse>> Handle(GetExamByLectureIdQuery request, CancellationToken cancellationToken)
+        {
+            var item = (await _service.GetAllAsync(cancellationToken)).SingleOrDefault(e => e.LectureId == request.LectureId);
+            if (item is null) return NotFound<ExamResponse>("Exam not found for lecture");
+            var resp = new ExamResponse
+            {
+                Id = item.Id,
+                LectureId = item.LectureId,
+                LectureName = item.Lecture.Title,
+                Questions = item.Questions.Select(q => new QuestionResponse
+                {
+                    Id = q.Id,
+                    QuestionType = q.QuestionType,
+                    Content = q.Content,
+                    AnswerType = q.AnswerType,
+                    Score = q.Score,
+                    ExamId = q.ExamId,
+                    Options = q.Options.Select(o => new QuestionOptionResponse
+                    {
+                        Id = o.Id,
+                        Content = o.Content,
+                        IsCorrect = o.IsCorrect,
+                        QuestionId = o.QuestionId
+                    }).ToList()
+                })
             };
             return Success(resp);
         }

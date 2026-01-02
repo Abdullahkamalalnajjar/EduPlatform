@@ -64,7 +64,7 @@ namespace Project.Api.Controllers
 
         // Accept multipart/form-data for file uploads or a URL for videos
         [HttpPost(Router.LectureRouting.Create + "/materials")]
-        public async Task<IActionResult> CreateMaterial([FromForm] string type, [FromForm] int lectureId, IFormFile? file, [FromForm] string? videoUrl, [FromForm] bool isFree = false)
+        public async Task<IActionResult> CreateMaterial([FromForm] string type, [FromForm] int lectureId, IFormFile? file, [FromForm] string? videoUrl, [FromForm] string title, [FromForm] bool isFree = false)
         {
             // Video type expects a URL
             if (string.Equals(type, "video", StringComparison.OrdinalIgnoreCase))
@@ -74,7 +74,7 @@ namespace Project.Api.Controllers
                     return BadRequest(new { Succeeded = false, Message = "Video materials require a fileUrl (video URL)." });
                 }
 
-                var cmd = new CreateLectureMaterialCommand { Type = type, VideoUrl = videoUrl, LectureId = lectureId, IsFree = isFree };
+                var cmd = new CreateLectureMaterialCommand { Type = type, VideoUrl = videoUrl, LectureId = lectureId, IsFree = isFree, Title = title };
                 var response = await Mediator.Send(cmd);
                 return NewResult(response);
             }

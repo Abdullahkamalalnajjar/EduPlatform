@@ -1,7 +1,4 @@
-using Microsoft.EntityFrameworkCore;
 using Project.Data.Entities.Content;
-using Project.Data.Interfaces;
-using Project.Service.Abstracts;
 
 namespace Project.Service.Implementations
 {
@@ -33,7 +30,7 @@ namespace Project.Service.Implementations
             await _unitOfWork.LectureMaterials.AddAsync(entity, cancellationToken);
             await _unitOfWork.CompeleteAsync();
             return entity;
-        }   
+        }
 
         public async Task<LectureMaterial> UpdateAsync(LectureMaterial entity, CancellationToken cancellationToken = default)
         {

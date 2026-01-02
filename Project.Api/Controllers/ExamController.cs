@@ -6,7 +6,6 @@ using Project.Data.AppMetaData;
 
 namespace Project.Api.Controllers
 {
-    [ApiController]
     public class ExamController : AppBaseController
     {
         [HttpGet(Router.ExamRouting.List)]
@@ -20,6 +19,14 @@ namespace Project.Api.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var request = new GetExamByIdQuery { Id = id };
+            var response = await Mediator.Send(request);
+            return NewResult(response);
+        }
+
+        [HttpGet(Router.LectureRouting.List + "/{lectureId}/exam")]
+        public async Task<IActionResult> GetByLectureId(int lectureId)
+        {
+            var request = new GetExamByLectureIdQuery { LectureId = lectureId };
             var response = await Mediator.Send(request);
             return NewResult(response);
         }
