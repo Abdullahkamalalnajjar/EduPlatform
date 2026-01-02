@@ -1,7 +1,4 @@
-using Microsoft.EntityFrameworkCore;
 using Project.Data.Entities.People;
-using Project.Data.Interfaces;
-using Project.Service.Abstracts;
 
 namespace Project.Service.Implementations
 {

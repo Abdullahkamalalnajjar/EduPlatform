@@ -48,7 +48,11 @@ namespace Project.Service.Implementations
 
             // determine numeric profile id if exists
             int? profileId = null;
-            var teacherId = await _context.Teachers.Where(t => t.ApplicationUserId == user.Id).Select(t => (int?)t.Id).FirstOrDefaultAsync(cancellationToken);
+            var teacher = await _context.Teachers.Where(t => t.ApplicationUserId == user.Id)
+                .Select(t => new { t.Id, t.PhoneNumber, t.FacebookUrl, t.TelegramUrl, t.WhatsAppNumber, t.PhotoUrl })
+                .FirstOrDefaultAsync(cancellationToken);
+
+            var teacherId = teacher?.Id;
             var studentId = await _context.Students.Where(s => s.ApplicationUserId == user.Id).Select(s => (int?)s.Id).FirstOrDefaultAsync(cancellationToken);
             var parentId = await _context.Parents.Where(p => p.ApplicationUserId == user.Id).Select(p => (int?)p.Id).FirstOrDefaultAsync(cancellationToken);
             var assistantId = await _context.Assistants.Where(a => a.ApplicationUserId == user.Id).Select(a => (int?)a.Id).FirstOrDefaultAsync(cancellationToken);
@@ -66,8 +70,12 @@ namespace Project.Service.Implementations
                 RefreshToken: refreshToken,
                 RefreshTokenExpiresIn: refreshTokenExpiresIn,
                 Roles: userRoles,
-                ApplicationUserId: user.Id,
-                UserId: profileId
+                UserId: profileId,
+                PhoneNumber: teacher?.PhoneNumber,
+                FacebookUrl: teacher?.FacebookUrl,
+                TelegramUrl: teacher?.TelegramUrl,
+                WhatsAppNumber: teacher?.WhatsAppNumber,
+                PhotoUrl: teacher?.PhotoUrl
             );
 
             return AuthResult.Success(response);
@@ -88,7 +96,7 @@ namespace Project.Service.Implementations
             refreshTokenEntity.RevokedOn = DateTime.UtcNow;
             // Generate the new token
             var (userRoles, userPerimission) = await GetUserRolesAndPermissions(user, cancellationToken);
-            var (newToken, expiresIn) = _jwtProvider.GenerateToken(user, userRoles, userPerimission);
+            var (newToken, expiresIn) = _jwtProvider.GenerateToken(user, userPerimission, userPerimission);
             // Generate the new refresh token
             var newRefreshToken = GeneratedRefreshToken();
             var newRefreshTokenExpiresIn = DateTime.UtcNow.AddDays(_tokenExpiresIn);
@@ -103,12 +111,16 @@ namespace Project.Service.Implementations
 
             // determine numeric profile id if exists
             int? profileId = null;
-            var teacherId = await _context.Teachers.Where(t => t.ApplicationUserId == user.Id).Select(t => (int?)t.Id).FirstOrDefaultAsync(cancellationToken);
-            var studentId = await _context.Students.Where(s => s.ApplicationUserId == user.Id).Select(s => (int?)s.Id).FirstOrDefaultAsync(cancellationToken);
-            var parentId = await _context.Parents.Where(p => p.ApplicationUserId == user.Id).Select(p => (int?)p.Id).FirstOrDefaultAsync(cancellationToken);
-            var assistantId = await _context.Assistants.Where(a => a.ApplicationUserId == user.Id).Select(a => (int?)a.Id).FirstOrDefaultAsync(cancellationToken);
+            var teacher = await _context.Teachers.Where(t => t.ApplicationUserId == user.Id)
+                .Select(t => new { t.Id, t.PhoneNumber, t.FacebookUrl, t.TelegramUrl, t.WhatsAppNumber, t.PhotoUrl })
+                .FirstOrDefaultAsync(cancellationToken);
 
-            profileId = teacherId ?? studentId ?? parentId ?? assistantId;
+            var teacherId2 = teacher?.Id;
+            var studentId2 = await _context.Students.Where(s => s.ApplicationUserId == user.Id).Select(s => (int?)s.Id).FirstOrDefaultAsync(cancellationToken);
+            var parentId2 = await _context.Parents.Where(p => p.ApplicationUserId == user.Id).Select(p => (int?)p.Id).FirstOrDefaultAsync(cancellationToken);
+            var assistantId2 = await _context.Assistants.Where(a => a.ApplicationUserId == user.Id).Select(a => (int?)a.Id).FirstOrDefaultAsync(cancellationToken);
+
+            profileId = teacherId2 ?? studentId2 ?? parentId2 ?? assistantId2;
 
             // return the response
             var response = new AuthResponse(
@@ -122,8 +134,12 @@ namespace Project.Service.Implementations
                 RefreshToken: newRefreshToken,
                 RefreshTokenExpiresIn: newRefreshTokenExpiresIn,
                 Roles: userRoles,
-                ApplicationUserId: user.Id,
-                UserId: profileId
+                UserId: profileId,
+                PhoneNumber: teacher?.PhoneNumber,
+                FacebookUrl: teacher?.FacebookUrl,
+                TelegramUrl: teacher?.TelegramUrl,
+                WhatsAppNumber: teacher?.WhatsAppNumber,
+                PhotoUrl: teacher?.PhotoUrl
             );
             return response;
 

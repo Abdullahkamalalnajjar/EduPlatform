@@ -27,7 +27,7 @@ namespace Project.Core.Features.CourseSubscriptions.Commands.Handlers
 
         public async Task<Response<int>> Handle(EditCourseSubscriptionCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _service.GetByIdAsync(request.Id, cancellationToken);
+            var entity = await _service.GetByIdForEditAsync(request.Id, cancellationToken);
             if (entity is null) return NotFound<int>("CourseSubscription not found");
             entity.StudentId = request.StudentId;
             entity.CourseId = request.CourseId;
@@ -46,7 +46,7 @@ namespace Project.Core.Features.CourseSubscriptions.Commands.Handlers
 
         public async Task<Response<int>> Handle(ChangeCourseSubscriptionStatusCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _service.GetByIdAsync(request.Id, cancellationToken);
+            var entity = await _service.GetByIdForEditAsync(request.Id, cancellationToken);
             if (entity is null) return NotFound<int>("CourseSubscription not found");
             entity.Status = request.Status ?? entity.Status;
             var updated = await _service.UpdateAsync(entity, cancellationToken);

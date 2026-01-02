@@ -130,8 +130,10 @@
             private const string Prefix = Rule + "/course-subscriptions";
             public const string List = Prefix;
             public const string GetById = Prefix + "/" + IdSegment;
+            public const string GetByStudentAndStatus = Prefix + "/student/{studentId}/status/{status}";
             public const string Create = Prefix;
             public const string Edit = Prefix + "/" + IdSegment;
+            public const string ChangeStatus = Prefix + "/status";
             public const string Delete = Prefix + "/" + IdSegment;
             public const string Paginated = Prefix + "/paginated";
         }

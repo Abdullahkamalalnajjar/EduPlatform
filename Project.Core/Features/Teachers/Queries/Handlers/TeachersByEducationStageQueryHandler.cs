@@ -23,6 +23,7 @@ namespace Project.Core.Features.Teachers.Queries.Handlers
                 UserId = t.ApplicationUserId,
                 ApplicationUserId = t.ApplicationUserId,
                 FullName = t.User.FullName,
+
                 SubjectId = t.SubjectId,
                 SubjectName = t.Subject.Name,
                 Courses = t.Courses.Select(c => new CourseDtoo
@@ -38,7 +39,8 @@ namespace Project.Core.Features.Teachers.Queries.Handlers
                         {
                             Id = m.Id,
                             Type = m.Type,
-                            FileUrl = m.FileUrl
+                            FileUrl = m.FileUrl,
+                            IsFree = m.IsFree
                         }).ToList()
                     }).ToList()
                 }).ToList()

@@ -1,6 +1,5 @@
-﻿using Project.Data.Entities.Users;
-using Project.Data.Entities.People;
-using Project.Data.Entities.Curriculum;
+﻿using Project.Data.Entities.People;
+using Project.Data.Entities.Users;
 
 namespace Project.Core.Features.Authentication.Command.Handlers
 {
@@ -20,9 +19,10 @@ namespace Project.Core.Features.Authentication.Command.Handlers
         private readonly ILogger<AuthenticatoinCommandHandler> _logger;
         private readonly IMapper _mapper;
         private readonly IJwtProvider _jwtProvider;
-        private readonly UserManager<ApplicationUser> _user_manager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IFileService _fileService;
 
-        public AuthenticatoinCommandHandler(IEmailSender emailSender, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IAuthService authService, ILogger<AuthenticatoinCommandHandler> logger, IMapper mapper, IJwtProvider jwtProvider, UserManager<ApplicationUser> userManager)
+        public AuthenticatoinCommandHandler(IEmailSender emailSender, IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IAuthService authService, ILogger<AuthenticatoinCommandHandler> logger, IMapper mapper, IJwtProvider jwtProvider, UserManager<ApplicationUser> userManager, IFileService fileService)
         {
             _emailSender = emailSender;
             _unitOfWork = unitOfWork;
@@ -31,8 +31,10 @@ namespace Project.Core.Features.Authentication.Command.Handlers
             _logger = logger;
             _mapper = mapper;
             _jwtProvider = jwtProvider;
-            _user_manager = userManager;
+            _userManager = userManager;
+            _fileService = fileService;
         }
+
         public async Task<Response<AuthResponse>> Handle(SignInCommand request, CancellationToken cancellationToken)
         {
             var result = await _authService.GetTokenAsync(request.Email, request.Password, cancellationToken);
@@ -53,32 +55,28 @@ namespace Project.Core.Features.Authentication.Command.Handlers
 
             try
             {
-                // Check if the user already exists
-                var existingUser = await _user_manager.FindByEmailAsync(request.Email);
+                var existingUser = await _userManager.FindByEmailAsync(request.Email);
                 if (existingUser is not null)
                     return BadRequest<AuthResponse>("An account with this email already exists.");
 
-                // Create a new user and mark email confirmed so no confirmation required
                 var newUser = _mapper.Map<ApplicationUser>(request);
-                newUser.EmailConfirmed = true; // skip email confirmation
+                newUser.EmailConfirmed = true;
 
-                var result = await _user_manager.CreateAsync(newUser, request.Password);
+                var result = await _userManager.CreateAsync(newUser, request.Password);
                 if (!result.Succeeded)
                 {
                     var errors = string.Join(", ", result.Errors.Select(e => e.Description));
                     return BadRequest<AuthResponse>(errors);
                 }
 
-                // assign role
                 var role = request.Role ?? "Student";
-                var roleResult = await _user_manager.AddToRoleAsync(newUser, role);
+                var roleResult = await _userManager.AddToRoleAsync(newUser, role);
                 if (!roleResult.Succeeded)
                 {
                     await transaction.RollbackAsync();
                     return BadRequest<AuthResponse>("Failed to assign role to user.");
                 }
 
-                // create profile based on role
                 switch (role.ToLowerInvariant())
                 {
                     case "student":
@@ -90,23 +88,55 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                         };
                         await _unitOfWork.Students.AddAsync(student, cancellationToken);
                         break;
+
                     case "teacher":
                         if (!request.SubjectId.HasValue)
                         {
                             await transaction.RollbackAsync();
                             return BadRequest<AuthResponse>("SubjectId is required for teacher role.");
                         }
+
+                        string? photoUrl = null;
+                        if (request.PhotoFile is not null)
+                        {
+                            var upload = await _fileService.UploadImage("uploads/teachers", request.PhotoFile);
+                            if (string.IsNullOrEmpty(upload) || upload == "FailedToUploadImage" || upload == "NoImage")
+                            {
+                                await transaction.RollbackAsync();
+                                return BadRequest<AuthResponse>("Failed to upload teacher photo.");
+                            }
+                            photoUrl = upload;
+                        }
+
                         var teacher = new Teacher
                         {
                             ApplicationUserId = newUser.Id,
-                            SubjectId = request.SubjectId.Value
+                            SubjectId = request.SubjectId.Value,
+                            PhoneNumber = request.PhoneNumber ?? string.Empty,
+                            FacebookUrl = request.FacebookUrl ?? string.Empty,
+                            TelegramUrl = request.TelegramUrl ?? string.Empty,
+                            WhatsAppNumber = request.WhatsAppNumber ?? string.Empty,
+                            PhotoUrl = photoUrl
                         };
                         await _unitOfWork.Teachers.AddAsync(teacher, cancellationToken);
 
-                        // Add education stages
+                        // Validate education stage ids exist to avoid FK conflicts
                         if (request.EducationStageIds != null && request.EducationStageIds.Any())
                         {
-                            foreach (var stageId in request.EducationStageIds.Distinct())
+                            var distinctIds = request.EducationStageIds.Distinct().ToList();
+                            var existingStageIds = await _unitOfWork.EducationStages.GetTableNoTracking()
+                                .Where(es => distinctIds.Contains(es.Id))
+                                .Select(es => es.Id)
+                                .ToListAsync(cancellationToken);
+
+                            var missing = distinctIds.Except(existingStageIds).ToList();
+                            if (missing.Any())
+                            {
+                                await transaction.RollbackAsync();
+                                return BadRequest<AuthResponse>($"Invalid education stage ids: {string.Join(',', missing)}");
+                            }
+
+                            foreach (var stageId in distinctIds)
                             {
                                 var tes = new TeacherEducationStage { Teacher = teacher, EducationStageId = stageId };
                                 await _unitOfWork.TeacherEducationStages.AddAsync(tes, cancellationToken);
@@ -114,14 +144,16 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                         }
 
                         break;
+
                     case "parent":
                         var parent = new Parent
                         {
                             ApplicationUserId = newUser.Id,
-                            NationalId = request.NationalId ?? string.Empty
+                            ParentPhoneNumber = request.ParentPhoneNumberOfParent ?? string.Empty
                         };
                         await _unitOfWork.Parents.AddAsync(parent, cancellationToken);
                         break;
+
                     case "assistant":
                         if (!request.TeacherId.HasValue)
                         {
@@ -135,23 +167,20 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                         };
                         await _unitOfWork.Assistants.AddAsync(assistant, cancellationToken);
                         break;
+
                     default:
                         break;
                 }
 
-                // persist changes
                 await _unitOfWork.CompeleteAsync();
                 await transaction.CommitAsync();
 
-                // generate token so user is logged in immediately
                 var tokenResult = await _authService.GetTokenAsync(request.Email, request.Password, cancellationToken);
                 if (!string.IsNullOrEmpty(tokenResult.ErrorMessage))
                 {
-                    // user created but token generation failed
                     return Success<AuthResponse>(null!, "Account created but automatic login failed: " + tokenResult.ErrorMessage);
                 }
 
-                // return token value to client
                 return Success<AuthResponse>(tokenResult.Response!, "Account created and logged in successfully");
             }
             catch (Exception ex)
@@ -202,17 +231,15 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                 _ => BadRequest<string>("Resend Code Failed")
             };
         }
+
         private async Task SendConfirmationEmail(ApplicationUser user, string code)
         {
-            // استخدام عنوان الباكيند مباشرة
             var request = _httpContextAccessor.HttpContext?.Request;
             var origin = $"{request?.Scheme}://{request?.Host}";
 
-            // توليد رابط تأكيد البريد
             var encodedCode = HttpUtility.UrlEncode(code);
             var confirmationUrl = $"{origin}/Api/V1/Authentication/ConfirmEmail?userId={user.Id}&code={encodedCode}";
 
-            // إنشاء جسم الإيميل
             var emailBody = EmailBodyBuilder.GenerateEmailBody("EmailConfirmation",
                 new Dictionary<string, string> {
             {"{{name}}" , user.FullName },
@@ -224,6 +251,86 @@ namespace Project.Core.Features.Authentication.Command.Handlers
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -12,7 +12,12 @@
         string? RefreshToken,
         DateTime RefreshTokenExpiresIn,
         IEnumerable<string> Roles,
-        string ApplicationUserId,
-        int? UserId
+        int? UserId,
+        // teacher profile fields (nullable for non-teacher users)
+        string? PhoneNumber,
+        string? FacebookUrl,
+        string? TelegramUrl,
+        string? WhatsAppNumber,
+        string? PhotoUrl
  );
 }

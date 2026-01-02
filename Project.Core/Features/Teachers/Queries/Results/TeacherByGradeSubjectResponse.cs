@@ -6,6 +6,8 @@ namespace Project.Core.Features.Teachers.Queries.Results
         public string UserId { get; set; } = null!;
         public string ApplicationUserId { get; set; } = null!;
         public string FullName { get; set; } = null!;
+        public string PhoneNumber { get; set; }
+        public string PhotoUrl { get; set; }
         public int SubjectId { get; set; }
         public string SubjectName { get; set; } = null!;
         public List<CourseDtoo> Courses { get; set; } = new();
@@ -31,5 +33,6 @@ namespace Project.Core.Features.Teachers.Queries.Results
         public int Id { get; set; }
         public string Type { get; set; } = null!;
         public string FileUrl { get; set; } = null!;
+        public bool IsFree { get; set; }
     }
 }

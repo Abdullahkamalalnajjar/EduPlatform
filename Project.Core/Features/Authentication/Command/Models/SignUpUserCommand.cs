@@ -1,8 +1,4 @@
-﻿using MediatR;
-using Project.Core.Bases;
-using Project.Data.Helpers;
-
-namespace Project.Core.Features.Authentication.Command.Models
+﻿namespace Project.Core.Features.Authentication.Command.Models
 {
     public class SignUpUserCommand : IRequest<Response<AuthResponse>>
     {
@@ -21,7 +17,15 @@ namespace Project.Core.Features.Authentication.Command.Models
         public int? SubjectId { get; set; } // teacher
         public List<int> EducationStageIds { get; set; } = new List<int>(); // teacher may select multiple stages
 
-        public string? NationalId { get; set; } // parent
+        // teacher profile fields
+        public string? PhoneNumber { get; set; }
+        public string? FacebookUrl { get; set; }
+        public string? TelegramUrl { get; set; }
+        public string? WhatsAppNumber { get; set; }
+        // profile photo file uploaded
+        public IFormFile? PhotoFile { get; set; }
+
+        public string? ParentPhoneNumberOfParent { get; set; } // parent
 
         public int? TeacherId { get; set; } // assistant
     }

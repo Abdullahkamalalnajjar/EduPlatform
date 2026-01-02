@@ -1,5 +1,3 @@
-using FluentValidation;
-using Project.Core.Features.Authentication.Command.Models;
 using Project.Data.Consts;
 
 namespace Project.Core.Features.Authentication.Command.Validators
@@ -36,7 +34,7 @@ namespace Project.Core.Features.Authentication.Command.Validators
 
             When(x => string.Equals(x.Role, DefaultRoles.Parent, StringComparison.OrdinalIgnoreCase), () =>
             {
-                RuleFor(x => x.NationalId).NotEmpty().WithMessage("NationalId is required for parent");
+                RuleFor(x => x.ParentPhoneNumber).NotEmpty().WithMessage("ParentPhoneNumber is required for parent");
             });
 
             When(x => string.Equals(x.Role, DefaultRoles.Assistant, StringComparison.OrdinalIgnoreCase), () =>

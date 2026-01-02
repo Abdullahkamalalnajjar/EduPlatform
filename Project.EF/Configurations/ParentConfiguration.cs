@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Project.Data.Entities.People;
 
 namespace Project.EF.Configurations
@@ -18,7 +16,7 @@ namespace Project.EF.Configurations
                 .HasForeignKey<Parent>(x => x.ApplicationUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Property(x => x.NationalId).HasMaxLength(100);
+            builder.Property(x => x.ParentPhoneNumber).HasMaxLength(100);
 
             builder.HasMany(x => x.Children)
                 .WithOne(s => s.Parent)

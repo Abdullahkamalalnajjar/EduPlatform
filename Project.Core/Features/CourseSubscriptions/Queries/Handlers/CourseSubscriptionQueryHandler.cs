@@ -1,14 +1,11 @@
-using AutoMapper;
-using MediatR;
 using Project.Core.Features.CourseSubscriptions.Queries.Models;
-using Project.Core.Features.CourseSubscriptions.Queries.Results;
-using Project.Service.Abstracts;
 
 namespace Project.Core.Features.CourseSubscriptions.Queries.Handlers
 {
     public class CourseSubscriptionQueryHandler : ResponseHandler,
-        IRequestHandler<GetAllCourseSubscriptionsQuery, Response<IEnumerable<CourseSubscriptionResponse>>>,
-        IRequestHandler<GetCourseSubscriptionByIdQuery, Response<CourseSubscriptionResponse>>
+        IRequestHandler<GetAllCourseSubscriptionsQuery, Response<IEnumerable<CourseSubscriptionDto>>>,
+        IRequestHandler<GetCourseSubscriptionByIdQuery, Response<CourseSubscriptionDto>>,
+        IRequestHandler<GetCourseSubscriptionByStudentAndStatusQuery, Response<IEnumerable<CourseSubscriptionDto>>>
     {
         private readonly ICourseSubscriptionService _service;
         private readonly IMapper _mapper;
@@ -19,19 +16,22 @@ namespace Project.Core.Features.CourseSubscriptions.Queries.Handlers
             _mapper = mapper;
         }
 
-        public async Task<Response<IEnumerable<CourseSubscriptionResponse>>> Handle(GetAllCourseSubscriptionsQuery request, CancellationToken cancellationToken)
+        public async Task<Response<IEnumerable<CourseSubscriptionDto>>> Handle(GetAllCourseSubscriptionsQuery request, CancellationToken cancellationToken)
         {
             var items = await _service.GetAllAsync(cancellationToken);
-            var result = items.Select(i => new CourseSubscriptionResponse { Id = i.Id, StudentId = i.StudentId, CourseId = i.CourseId, Status = i.Status, CreatedAt = i.CreatedAt }).ToList();
-            return Success<IEnumerable<CourseSubscriptionResponse>>(result);
+            return Success<IEnumerable<CourseSubscriptionDto>>(items);
         }
 
-        public async Task<Response<CourseSubscriptionResponse>> Handle(GetCourseSubscriptionByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Response<CourseSubscriptionDto>> Handle(GetCourseSubscriptionByIdQuery request, CancellationToken cancellationToken)
         {
             var item = await _service.GetByIdAsync(request.Id, cancellationToken);
-            if (item is null) return NotFound<CourseSubscriptionResponse>("CourseSubscription not found");
-            var resp = new CourseSubscriptionResponse { Id = item.Id, StudentId = item.StudentId, CourseId = item.CourseId, Status = item.Status, CreatedAt = item.CreatedAt };
-            return Success(resp);
+            if (item is null) return NotFound<CourseSubscriptionDto>("CourseSubscription not found");
+            return Success(item);
+        }
+        public async Task<Response<IEnumerable<CourseSubscriptionDto>>> Handle(GetCourseSubscriptionByStudentAndStatusQuery request, CancellationToken cancellationToken)
+        {
+            var courseSubscriptions = await _service.GetByStudentIdAndStatusAsync(request.StudentId, request.Status, cancellationToken);
+            return Success<IEnumerable<CourseSubscriptionDto>>(courseSubscriptions);
         }
     }
 }

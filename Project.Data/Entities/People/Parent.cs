@@ -9,7 +9,7 @@ namespace Project.Data.Entities.People
         public string ApplicationUserId { get; set; } = null!;
         public ApplicationUser User { get; set; } = null!;
 
-        public string NationalId { get; set; } = null!;
+        public string ParentPhoneNumber { get; set; } = null!;
 
         public ICollection<Student> Children { get; set; } = new List<Student>();
     }

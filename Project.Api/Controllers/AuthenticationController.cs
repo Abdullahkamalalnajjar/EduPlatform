@@ -1,7 +1,7 @@
-﻿using Project.Api.Base;
+﻿using Microsoft.AspNetCore.Mvc;
+using Project.Api.Base;
 using Project.Core.Features.Authentication.Command.Models;
 using Project.Data.AppMetaData;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Project.Api.Controllers
 {
@@ -9,7 +9,7 @@ namespace Project.Api.Controllers
     public class AuthenticationController : AppBaseController
     {
         [HttpPost(Router.AuthenticationRouting.SignUp)]
-        public async Task<IActionResult> SignUp([FromBody] SignUpUserCommand command)
+        public async Task<IActionResult> SignUp([FromForm] SignUpUserCommand command)
         {
             var response = await Mediator.Send(command);
             return NewResult(response);
