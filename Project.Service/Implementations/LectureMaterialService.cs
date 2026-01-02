@@ -33,7 +33,7 @@ namespace Project.Service.Implementations
             await _unitOfWork.LectureMaterials.AddAsync(entity, cancellationToken);
             await _unitOfWork.CompeleteAsync();
             return entity;
-        }
+        }   
 
         public async Task<LectureMaterial> UpdateAsync(LectureMaterial entity, CancellationToken cancellationToken = default)
         {

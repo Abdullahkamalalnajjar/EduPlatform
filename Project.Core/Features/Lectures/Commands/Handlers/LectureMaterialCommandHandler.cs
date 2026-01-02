@@ -37,7 +37,7 @@ namespace Project.Core.Features.Lectures.Commands.Handlers
                 fileUrl = uploadResult;
             }
 
-            var material = new LectureMaterial { Type = request.Type, FileUrl = fileUrl, LectureId = request.LectureId, IsFree = request.IsFree };
+            var material = new LectureMaterial { Type = request.Type,Title=request.Title ,FileUrl = fileUrl, LectureId = request.LectureId, IsFree = request.IsFree };
             var created = await _lectureMaterialService.CreateAsync(material, cancellationToken);
             return Success(created.Id);
         }
@@ -47,6 +47,7 @@ namespace Project.Core.Features.Lectures.Commands.Handlers
             var material = await _lectureMaterialService.GetByIdAsync(request.Id, cancellationToken);
             if (material is null) return NotFound<int>("Material not found");
             material.Type = request.Type;
+            material.Title = request.Title;
             material.FileUrl = request.FileUrl;
             material.LectureId = request.LectureId;
             material.IsFree = request.IsFree;

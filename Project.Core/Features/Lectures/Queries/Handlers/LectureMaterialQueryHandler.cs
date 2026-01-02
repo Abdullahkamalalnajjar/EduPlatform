@@ -22,7 +22,7 @@ namespace Project.Core.Features.Lectures.Queries.Handlers
         public async Task<Response<IEnumerable<LectureMaterialResponse>>> Handle(GetAllLectureMaterialsQuery request, CancellationToken cancellationToken)
         {
             var materials = await _unitOfWork.LectureMaterials.GetTableNoTracking().ToListAsync(cancellationToken);
-            var result = materials.Select(m => new LectureMaterialResponse { Id = m.Id, Type = m.Type, FileUrl = m.FileUrl ,LectureId = m.LectureId, IsFree = m.IsFree }).ToList();
+            var result = materials.Select(m => new LectureMaterialResponse { Id = m.Id,Title=m.Title ,Type = m.Type, FileUrl = m.FileUrl ,LectureId = m.LectureId, IsFree = m.IsFree }).ToList();
             return Success<IEnumerable<LectureMaterialResponse>>(result);
         }
 
@@ -30,8 +30,8 @@ namespace Project.Core.Features.Lectures.Queries.Handlers
         {
             var m = await _unitOfWork.LectureMaterials.GetByIdAsync(request.Id);
             if (m is null) return NotFound<LectureMaterialResponse>("Material not found");
-            var resp = new LectureMaterialResponse { Id = m.Id, Type = m.Type, FileUrl = m.FileUrl, LectureId = m.LectureId, IsFree = m.IsFree };
+            var resp = new LectureMaterialResponse { Id = m.Id, Title = m.Title, Type = m.Type, FileUrl = m.FileUrl, LectureId = m.LectureId, IsFree = m.IsFree };
             return Success(resp);
-        }
+        } 
     }
 }
