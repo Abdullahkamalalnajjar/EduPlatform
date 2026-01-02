@@ -10,6 +10,8 @@ namespace Project.Core.Features.Teachers.Queries.Results
         public string PhotoUrl { get; set; }
         public int SubjectId { get; set; }
         public string SubjectName { get; set; } = null!;
+        public string WhatAppNumber { get; set; }
+        public string TeacherProfile { get; set; } = null!;
         public List<CourseDtoo> Courses { get; set; } = new();
     }
 

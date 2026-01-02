@@ -26,6 +26,8 @@ namespace Project.Core.Features.Teachers.Queries.Handlers
 
                 SubjectId = t.SubjectId,
                 SubjectName = t.Subject.Name,
+                TeacherProfile = t.PhotoUrl,
+                WhatAppNumber = t.WhatsAppNumber,
                 Courses = t.Courses.Select(c => new CourseDtoo
                 {
                     Id = c.Id,
