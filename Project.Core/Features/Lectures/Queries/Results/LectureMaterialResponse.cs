@@ -6,5 +6,7 @@ namespace Project.Core.Features.Lectures.Queries.Results
         public string Type { get; set; } = null!;
         public string FileUrl { get; set; } = null!;
         public int LectureId { get; set; }
+        public bool IsFree { get; set; } = false;
+
     }
 }
