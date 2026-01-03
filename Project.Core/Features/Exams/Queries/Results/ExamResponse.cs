@@ -8,6 +8,9 @@ namespace Project.Core.Features.Exams.Queries.Results
         public string Title { get; set; } = null!;
         public int LectureId { get; set; }
         public string LectureName { get; set; } = null!;
+        public bool IsFinished { get; set; }
+        public DateTime? Deadline { get; set; }
+        public decimal? DurationInMinutes { get; set; }
         public IEnumerable<QuestionResponse> Questions { get; set; } = new List<QuestionResponse>();
     }
 }

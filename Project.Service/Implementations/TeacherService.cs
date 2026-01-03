@@ -66,15 +66,19 @@ namespace Project.Service.Implementations
         {
             return await _unitOfWork.TeacherEducationStages.GetTableNoTracking()
                 .Include(ts => ts.Teacher)
-                .ThenInclude(t => t.User)
-                .Include(ts => ts.EducationStage)
+                    .ThenInclude(t => t.User)
+                .Include(ts => ts.Teacher)
+                    .ThenInclude(t => t.Subject)
+                .Include(ts => ts.Teacher)
+                    .ThenInclude(t => t.Courses)
+                        .ThenInclude(c => c.EducationStage)
+                .Include(ts => ts.Teacher)
+                    .ThenInclude(t => t.Courses)
+                        .ThenInclude(c => c.Lectures)
+                            .ThenInclude(l => l.Materials)
                 .Where(ts => ts.EducationStageId == educationStageId && ts.Teacher.SubjectId == subjectId)
                 .Select(ts => ts.Teacher)
                 .Distinct()
-                .Include(t => t.Courses)
-                    .ThenInclude(c => c.Lectures)
-                        .ThenInclude(l => l.Materials)
-                .Include(t => t.Subject)
                 .ToListAsync(cancellationToken);
         }
     }

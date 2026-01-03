@@ -29,7 +29,9 @@ namespace Project.Core.Features.Exams.Queries.Handlers
                     Title = e.Title,
                     LectureId = e.LectureId,
                     LectureName = e.Lecture.Title,
-
+                    IsFinished = e.IsFinashed,
+                    Deadline = e.Deadline,
+                    DurationInMinutes = e.DurationInMinutes,
                     Questions = e.Questions.Select(q => new QuestionResponse
                     {
                         Id = q.Id,
@@ -61,6 +63,9 @@ namespace Project.Core.Features.Exams.Queries.Handlers
                 Title = item.Title,
                 LectureId = item.LectureId,
                 LectureName = item.Lecture.Title,
+                IsFinished = item.IsFinashed,
+                Deadline = item.Deadline,
+                DurationInMinutes = item.DurationInMinutes,
                 Questions = item.Questions.Select(q => new QuestionResponse
                 {
 
@@ -93,6 +98,9 @@ namespace Project.Core.Features.Exams.Queries.Handlers
                 Title = item.Title,
                 LectureId = item.LectureId,
                 LectureName = item.Lecture.Title,
+                IsFinished = item.IsFinashed,
+                Deadline = item.Deadline,
+                DurationInMinutes = item.DurationInMinutes,
                 Questions = item.Questions.Select(q => new QuestionResponse
                 {
                     Id = q.Id,

@@ -12,6 +12,7 @@ namespace Project.EF.Configurations
                 .WithOne(l => l.Exam)
                 .HasForeignKey<Exam>(x => x.LectureId)
                 .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(x => x.DurationInMinutes).HasColumnType("decimal(8,2)");
 
             builder.HasMany(x => x.Questions)
                 .WithOne(q => q.Exam)

@@ -7,7 +7,9 @@
         public int EducationStageId { get; set; }
         public string EducationStageName { get; set; } = null!;
         public string CourseImageUrl { get; set; } = null!;
-
+        public string PhoneNumber { get; set; } = null!;
+        public string FacebookUrl { get; set; } = null!;
+        public string TelegramUrl { get; set; } = null!;
         public int TeacherId { get; set; }
         public string TeacherName { get; set; } = null!;
 

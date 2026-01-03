@@ -11,6 +11,9 @@ namespace Project.Core.Features.Teachers.Queries.Results
         public int SubjectId { get; set; }
         public string SubjectName { get; set; } = null!;
         public string WhatAppNumber { get; set; }
+
+        public string FacebookUrl { get; set; } = null!;
+        public string TelegramUrl { get; set; } = null!;
         public string TeacherProfile { get; set; } = null!;
         public List<CourseDtoo> Courses { get; set; } = new();
     }
@@ -19,6 +22,7 @@ namespace Project.Core.Features.Teachers.Queries.Results
     {
         public int Id { get; set; }
         public string Title { get; set; } = null!;
+        public string CourseImageUrl { get; set; } = null!;
         public string EducationStageName { get; set; } = null!;
         public List<LectureDtoo> Lectures { get; set; } = new();
     }
