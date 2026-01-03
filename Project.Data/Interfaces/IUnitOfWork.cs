@@ -27,6 +27,7 @@ namespace Project.Data.Interfaces
         IQuestionRepository Questions { get; }
         IQuestionOptionRepository QuestionOptions { get; }
         IStudentExamResultRepository StudentExamResults { get; }
+        IStudentAnswerRepository StudentAnswers { get; }
 
         ITeacherEducationStageRepository TeacherEducationStages { get; }
         IEducationStageRepository EducationStages { get; }

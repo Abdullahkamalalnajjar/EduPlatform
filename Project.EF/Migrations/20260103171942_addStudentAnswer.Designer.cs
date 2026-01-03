@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project.EF;
 
@@ -11,9 +12,11 @@ using Project.EF;
 namespace Project.EF.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260103171942_addStudentAnswer")]
+    partial class addStudentAnswer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -498,44 +501,6 @@ namespace Project.EF.Migrations
                     b.HasIndex("QuestionId");
 
                     b.ToTable("QuestionOptions");
-                });
-
-            modelBuilder.Entity("Project.Data.Entities.Exams.StudentAnswer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ImageAnswerUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsCorrect")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("PointsEarned")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SelectedOptionIds")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StudentExamResultId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TextAnswer")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.HasIndex("StudentExamResultId");
-
-                    b.ToTable("StudentAnswers");
                 });
 
             modelBuilder.Entity("Project.Data.Entities.Exams.StudentExamResult", b =>
@@ -1079,25 +1044,6 @@ namespace Project.EF.Migrations
                         .IsRequired();
 
                     b.Navigation("Question");
-                });
-
-            modelBuilder.Entity("Project.Data.Entities.Exams.StudentAnswer", b =>
-                {
-                    b.HasOne("Project.Data.Entities.Exams.Question", "Question")
-                        .WithMany()
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Project.Data.Entities.Exams.StudentExamResult", "StudentExamResult")
-                        .WithMany()
-                        .HasForeignKey("StudentExamResultId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Question");
-
-                    b.Navigation("StudentExamResult");
                 });
 
             modelBuilder.Entity("Project.Data.Entities.Exams.StudentExamResult", b =>

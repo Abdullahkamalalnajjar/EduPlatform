@@ -29,6 +29,13 @@ namespace Project.Service.Implementations
                 .SingleOrDefaultAsync(e => e.Id == id, cancellationToken);
         }
 
+        public async Task<Exam?> GetByLectureIdAsync(int lectureId, CancellationToken cancellationToken = default)
+        {
+            return await _unitOfWork.Exams.GetTableNoTracking()
+                .Include(e => e.Lecture)
+                .SingleOrDefaultAsync(e => e.LectureId == lectureId, cancellationToken);
+        }
+
         public async Task<Exam> CreateAsync(Exam entity, CancellationToken cancellationToken = default)
         {
             await _unitOfWork.Exams.AddAsync(entity, cancellationToken);

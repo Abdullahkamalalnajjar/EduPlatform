@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Project.Data.Entities.Content;
+﻿using Project.Data.Entities.Content;
 using Project.Data.Entities.Curriculum;
 using Project.Data.Entities.Exams;
 using Project.Data.Entities.People;
@@ -54,5 +53,6 @@ namespace Project.EF
 
         // Teacher Education stages
         public DbSet<TeacherEducationStage> TeacherEducationStages { get; set; }
+        public DbSet<Project.Data.Entities.Exams.StudentAnswer> StudentAnswers { get; set; }
     }
 }

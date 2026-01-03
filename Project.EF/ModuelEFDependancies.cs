@@ -27,6 +27,7 @@
             services.AddTransient<IQuestionOptionRepository, QuestionOptionRepository>();
             services.AddTransient<IStudentExamResultRepository, StudentExamResultRepository>();
             services.AddTransient<IEducationStageRepository, EducationStageRepository>();
+            services.AddTransient<IStudentAnswerRepository, StudentAnswerRepository>();
             return services;
         }
     }

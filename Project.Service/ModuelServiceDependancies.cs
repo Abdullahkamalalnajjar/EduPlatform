@@ -34,6 +34,7 @@ namespace Project.Service
             services.AddTransient<IQuestionOptionService, QuestionOptionService>();
             services.AddTransient<IStudentExamResultService, StudentExamResultService>();
             services.AddTransient<IEducationStageService, EducationStageService>();
+            services.AddTransient<IStudentAnswerService, StudentAnswerService>();
 
             return services;
         }

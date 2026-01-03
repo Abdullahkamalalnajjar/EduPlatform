@@ -27,6 +27,13 @@ namespace Project.Core.Features.Exams.Commands.Handlers
             var lecture = await _lectureService.GetByIdAsync(request.LectureId, cancellationToken);
             if (lecture is null) return NotFound<int>("Lecture not found");
 
+            // Check if exam already exists for this lecture using optimized database query
+            var existingExam = await _service.GetByLectureIdAsync(request.LectureId, cancellationToken);
+            if (existingExam != null)
+            {
+                return BadRequest<int>("???? ?????? ????"); // Exam already exists
+            }
+
             var entity = new Exam
             {
                 Title = request.Title,
