@@ -58,6 +58,14 @@ namespace Project.Service.Implementations
                 .ToListAsync(cancellationToken);
         }
 
+        public async Task<IEnumerable<CourseSubscriptionDto>> GetByTeacherIdAsync(int teacherId, CancellationToken cancellationToken = default)
+        {
+            return await _unitOfWork.CourseSubscriptions.GetTableNoTracking()
+                .Where(cs => cs.Course.Teacher.Id == teacherId)
+                .Select(ToCourseSubscriptionDto)
+                .ToListAsync(cancellationToken);
+        }
+
         public Task<CourseSubscription?> GetByIdForEditAsync(int id, CancellationToken cancellationToken = default)
         {
             return _unitOfWork.CourseSubscriptions.GetTableAsTracking()

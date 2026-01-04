@@ -58,5 +58,13 @@ namespace Project.Api.Controllers
             var response = await Mediator.Send(request);
             return NewResult(response);
         }
+
+        [HttpGet(Router.CourseSubscriptionRouting.List + "/teacher/{teacherId}")]
+        public async Task<IActionResult> GetByTeacher(int teacherId)
+        {
+            var request = new GetStudentSubscriptionsByTeacherQuery { TeacherId = teacherId };
+            var response = await Mediator.Send(request);
+            return NewResult(response);
+        }
     }
 }
