@@ -69,5 +69,13 @@ namespace Project.Api.Controllers
             var response = await Mediator.Send(request);
             return NewResult(response);
         }
+
+        // Grade exam answers (for teacher/assistant)
+        [HttpPost(Router.ExamRouting.Grade)]
+        public async Task<IActionResult> GradeExam([FromBody] GradeExamCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return NewResult(response);
+        }
     }
 }

@@ -22,6 +22,13 @@ namespace Project.Service.Implementations
                 .ToListAsync(cancellationToken);
         }
 
+        public async Task<StudentAnswer?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _unitOfWork.StudentAnswers.GetTableAsTracking()
+                .Include(sa => sa.Question)
+                .FirstOrDefaultAsync(sa => sa.Id == id, cancellationToken);
+        }
+
         public async Task<StudentAnswer> CreateAsync(StudentAnswer entity, CancellationToken cancellationToken = default)
         {
             await _unitOfWork.StudentAnswers.AddAsync(entity, cancellationToken);
@@ -34,6 +41,13 @@ namespace Project.Service.Implementations
             await _unitOfWork.StudentAnswers.AddRangeAsync(entities);
             await _unitOfWork.CompeleteAsync();
             return entities;
+        }
+
+        public async Task<StudentAnswer> UpdateAsync(StudentAnswer entity, CancellationToken cancellationToken = default)
+        {
+            _unitOfWork.StudentAnswers.Update(entity);
+            await _unitOfWork.CompeleteAsync();
+            return entity;
         }
 
         public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)

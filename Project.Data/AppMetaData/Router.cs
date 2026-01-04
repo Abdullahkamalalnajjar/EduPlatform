@@ -123,6 +123,7 @@
             public const string Edit = Prefix + "/Edit";
             public const string Delete = Prefix + "/" + IdSegment;
             public const string Paginated = Prefix + "/paginated";
+            public const string Grade = Prefix + "/grade";
         }
 
         public static class CourseSubscriptionRouting
