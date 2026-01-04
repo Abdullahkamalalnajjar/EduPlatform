@@ -31,6 +31,7 @@ namespace Project.EF.Repositories
         public IStudentExamResultRepository StudentExamResults { get; private set; }
         public IStudentAnswerRepository StudentAnswers { get; private set; }
         public IStudentAnswerOptionRepository StudentAnswerOptions { get; private set; }
+        public ITemporaryStudentAnswerRepository TemporaryStudentAnswers { get; private set; }
 
         public ITeacherEducationStageRepository TeacherEducationStages { get; private set; }
         public IEducationStageRepository EducationStages { get; private set; }
@@ -59,6 +60,7 @@ namespace Project.EF.Repositories
             StudentExamResults = new StudentExamResultRepository(_context);
             StudentAnswers = new StudentAnswerRepository(_context);
             StudentAnswerOptions = new StudentAnswerOptionRepository(_context);
+            TemporaryStudentAnswers = new TemporaryStudentAnswerRepository(_context);
 
             TeacherEducationStages = new TeacherEducationStageRepository(_context);
             EducationStages = new EducationStageRepository(_context);

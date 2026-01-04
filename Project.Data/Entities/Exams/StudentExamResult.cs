@@ -1,6 +1,6 @@
-namespace Project.Data.Entities.Exams
+﻿namespace Project.Data.Entities.Exams
 {
-    public class StudentExamResult
+    public class StudentExamResult //شهادهت نتايج الامتحانات الطلابية
     {
         public int Id { get; set; }
 

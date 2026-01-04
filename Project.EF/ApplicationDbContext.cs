@@ -52,6 +52,7 @@ namespace Project.EF
         public DbSet<Project.Data.Entities.Exams.StudentExamResult> StudentExamResults { get; set; }
         public DbSet<Project.Data.Entities.Exams.StudentAnswer> StudentAnswers { get; set; }
         public DbSet<Project.Data.Entities.Exams.StudentAnswerOption> StudentAnswerOptions { get; set; }
+        public DbSet<Project.Data.Entities.Exams.TemporaryStudentAnswer> TemporaryStudentAnswers { get; set; }
 
         // Teacher Education stages
         public DbSet<TeacherEducationStage> TeacherEducationStages { get; set; }

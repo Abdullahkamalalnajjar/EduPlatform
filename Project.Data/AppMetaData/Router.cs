@@ -171,5 +171,12 @@
             public const string List = Prefix;
             public const string GetById = Prefix + "/" + IdSegment;
         }
+
+        public static class StudentAnswersRouting
+        {
+            private const string Prefix = Rule + "/student-answers";
+            public const string SubmitImageAnswer = Prefix + "/image";
+            public const string GetTemporaryAnswers = Prefix + "/temporary";
+        }
     }
 }

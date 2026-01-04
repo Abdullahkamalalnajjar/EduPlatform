@@ -1,5 +1,6 @@
 using Project.Core.Features.Exams.Commands.Models;
 using Project.Data.Entities.Exams;
+using Project.Service.Abstracts;
 
 namespace Project.Core.Features.Exams.Commands.Handlers
 {
@@ -7,12 +8,14 @@ namespace Project.Core.Features.Exams.Commands.Handlers
     {
         private readonly IStudentExamResultService _resultService;
         private readonly IStudentAnswerService _answerService;
+        private readonly ITemporaryStudentAnswerService _tempAnswerService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public SubmitExamAnswersCommandHandler(IStudentExamResultService resultService, IStudentAnswerService answerService, IUnitOfWork unitOfWork)
+        public SubmitExamAnswersCommandHandler(IStudentExamResultService resultService, IStudentAnswerService answerService, ITemporaryStudentAnswerService tempAnswerService, IUnitOfWork unitOfWork)
         {
             _resultService = resultService;
             _answerService = answerService;
+            _tempAnswerService = tempAnswerService;
             _unitOfWork = unitOfWork;
         }
 
@@ -64,6 +67,27 @@ namespace Project.Core.Features.Exams.Commands.Handlers
             if (studentAnswers.Any())
             {
                 await _answerService.CreateBulkAsync(studentAnswers, cancellationToken);
+            }
+
+            // Fetch temporary image answers and convert them to permanent StudentAnswers
+            var tempAnswers = await _tempAnswerService.GetByStudentAndExamAsync(request.StudentId, request.ExamId, cancellationToken);
+            foreach (var tempAnswer in tempAnswers)
+            {
+                var permanentAnswer = new StudentAnswer
+                {
+                    StudentExamResultId = created.Id,
+                    QuestionId = tempAnswer.QuestionId,
+                    ImageAnswerUrl = tempAnswer.ImageAnswerUrl,
+                    IsCorrect = false // Will be manually graded
+                };
+
+                await _answerService.CreateAsync(permanentAnswer, cancellationToken);
+            }
+
+            // Delete temporary answers after conversion
+            if (tempAnswers.Any())
+            {
+                await _tempAnswerService.DeleteByStudentAndExamAsync(request.StudentId, request.ExamId, cancellationToken);
             }
 
             return Success(created.Id);

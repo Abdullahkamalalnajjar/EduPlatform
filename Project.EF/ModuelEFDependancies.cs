@@ -28,6 +28,8 @@
             services.AddTransient<IStudentExamResultRepository, StudentExamResultRepository>();
             services.AddTransient<IEducationStageRepository, EducationStageRepository>();
             services.AddTransient<IStudentAnswerRepository, StudentAnswerRepository>();
+            services.AddTransient<IStudentAnswerOptionRepository, StudentAnswerOptionRepository>();
+            services.AddTransient<ITemporaryStudentAnswerRepository, TemporaryStudentAnswerRepository>();
             return services;
         }
     }
