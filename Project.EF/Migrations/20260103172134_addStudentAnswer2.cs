@@ -38,7 +38,7 @@ namespace Project.EF.Migrations
                         column: x => x.StudentExamResultId,
                         principalTable: "StudentExamResults",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
