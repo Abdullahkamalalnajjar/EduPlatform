@@ -20,7 +20,11 @@ namespace Project.EF.Configurations
                 .HasForeignKey(x => x.QuestionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Property(x => x.SelectedOptionIds).IsRequired(false);
+            builder.HasMany(x => x.SelectedOptions)
+                .WithOne(so => so.StudentAnswer)
+                .HasForeignKey(so => so.StudentAnswerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.Property(x => x.TextAnswer).IsRequired(false);
             builder.Property(x => x.ImageAnswerUrl).IsRequired(false);
             builder.Property(x => x.PointsEarned).IsRequired(false);

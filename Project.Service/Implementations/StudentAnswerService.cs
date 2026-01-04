@@ -1,7 +1,4 @@
-using Microsoft.EntityFrameworkCore;
 using Project.Data.Entities.Exams;
-using Project.Data.Interfaces;
-using Project.Service.Abstracts;
 
 namespace Project.Service.Implementations
 {
@@ -19,6 +16,8 @@ namespace Project.Service.Implementations
             return await _unitOfWork.StudentAnswers.GetTableNoTracking()
                 .Include(sa => sa.Question)
                 .ThenInclude(q => q.Options)
+                .Include(sa => sa.SelectedOptions)
+                .ThenInclude(so => so.QuestionOption)
                 .Where(sa => sa.StudentExamResultId == studentExamResultId)
                 .ToListAsync(cancellationToken);
         }

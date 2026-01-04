@@ -19,6 +19,8 @@ namespace Project.EF.Configurations
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.Property(x => x.TotalScore).IsRequired();
+            builder.Property(x => x.IsFinashed).IsRequired().HasDefaultValue(false);
+            builder.Property(x => x.SubmittedAt).IsRequired();
         }
     }
 }

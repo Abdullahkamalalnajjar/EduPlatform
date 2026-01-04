@@ -21,7 +21,15 @@ namespace Project.Core.Features.StudentExamResults.Queries.Handlers
         public async Task<Response<IEnumerable<StudentExamResultResponse>>> Handle(GetAllStudentExamResultsQuery request, CancellationToken cancellationToken)
         {
             var items = await _service.GetAllAsync(cancellationToken);
-            var result = items.Select(r => new StudentExamResultResponse { Id = r.Id, StudentId = r.StudentId, ExamId = r.ExamId, TotalScore = r.TotalScore, SubmittedAt = r.SubmittedAt }).ToList();
+            var result = items.Select(r => new StudentExamResultResponse
+            {
+                Id = r.Id,
+                StudentId = r.StudentId,
+                ExamId = r.ExamId,
+                TotalScore = r.TotalScore,
+                SubmittedAt = r.SubmittedAt,
+                IsFinished = r.IsFinashed
+            }).ToList();
             return Success<IEnumerable<StudentExamResultResponse>>(result);
         }
     }

@@ -1,7 +1,6 @@
 using MediatR;
 using Project.Core.Features.StudentAnswers.Queries.Models;
 using Project.Service.Abstracts;
-using System.Text.Json;
 
 namespace Project.Core.Features.StudentAnswers.Queries.Handlers
 {
@@ -28,7 +27,7 @@ namespace Project.Core.Features.StudentAnswers.Queries.Handlers
                 QuestionContent = sa.Question?.Content ?? "Unknown",
                 QuestionType = sa.Question?.QuestionType ?? "Unknown",
                 AnswerType = sa.Question?.AnswerType ?? "Unknown",
-                SelectedOptionIds = sa.SelectedOptionIds,
+                SelectedOptionIds = string.Join(",", sa.SelectedOptions.Select(so => so.QuestionOptionId)), // Convert back to comma-separated IDs if needed
                 TextAnswer = sa.TextAnswer,
                 ImageAnswerUrl = sa.ImageAnswerUrl,
                 PointsEarned = sa.PointsEarned,
@@ -39,8 +38,7 @@ namespace Project.Core.Features.StudentAnswers.Queries.Handlers
                     Id = o.Id,
                     Content = o.Content,
                     IsCorrect = o.IsCorrect,
-                    IsSelected = sa.SelectedOptionIds != null && 
-                                JsonSerializer.Deserialize<List<int>>(sa.SelectedOptionIds)?.Contains(o.Id) == true
+                    IsSelected = sa.SelectedOptions.Any(so => so.QuestionOptionId == o.Id)
                 }).ToList() ?? new List<OptionDto>()
             }).ToList();
 

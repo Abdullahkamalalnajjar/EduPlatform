@@ -5,40 +5,29 @@
 namespace Project.EF.Migrations
 {
     /// <inheritdoc />
-    public partial class addStudentAnswer2 : Migration
+    public partial class updateExam2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "StudentAnswers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StudentExamResultId = table.Column<int>(type: "int", nullable: false),
-                    QuestionId = table.Column<int>(type: "int", nullable: false),
-                    TextAnswer = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageAnswerUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PointsEarned = table.Column<int>(type: "int", nullable: true),
-                    IsCorrect = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_StudentAnswers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_StudentAnswers_Questions_QuestionId",
-                        column: x => x.QuestionId,
-                        principalTable: "Questions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_StudentAnswers_StudentExamResults_StudentExamResultId",
-                        column: x => x.StudentExamResultId,
-                        principalTable: "StudentExamResults",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
-                });
+            migrationBuilder.DropForeignKey(
+                name: "FK_StudentAnswers_StudentExamResults_StudentExamResultId",
+                table: "StudentAnswers");
+
+            migrationBuilder.DropColumn(
+                name: "SelectedOptionIds",
+                table: "StudentAnswers");
+
+            migrationBuilder.DropColumn(
+                name: "IsFinashed",
+                table: "Exams");
+
+            migrationBuilder.AddColumn<bool>(
+                name: "IsFinashed",
+                table: "StudentExamResults",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
 
             migrationBuilder.CreateTable(
                 name: "StudentAnswerOptions",
@@ -67,16 +56,6 @@ namespace Project.EF.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_StudentAnswers_QuestionId",
-                table: "StudentAnswers",
-                column: "QuestionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_StudentAnswers_StudentExamResultId",
-                table: "StudentAnswers",
-                column: "StudentExamResultId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_StudentAnswerOption_Unique",
                 table: "StudentAnswerOptions",
                 columns: new[] { "StudentAnswerId", "QuestionOptionId" },
@@ -86,16 +65,49 @@ namespace Project.EF.Migrations
                 name: "IX_StudentAnswerOptions_QuestionOptionId",
                 table: "StudentAnswerOptions",
                 column: "QuestionOptionId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_StudentAnswers_StudentExamResults_StudentExamResultId",
+                table: "StudentAnswers",
+                column: "StudentExamResultId",
+                principalTable: "StudentExamResults",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_StudentAnswers_StudentExamResults_StudentExamResultId",
+                table: "StudentAnswers");
+
             migrationBuilder.DropTable(
                 name: "StudentAnswerOptions");
 
-            migrationBuilder.DropTable(
-                name: "StudentAnswers");
+            migrationBuilder.DropColumn(
+                name: "IsFinashed",
+                table: "StudentExamResults");
+
+            migrationBuilder.AddColumn<string>(
+                name: "SelectedOptionIds",
+                table: "StudentAnswers",
+                type: "nvarchar(max)",
+                nullable: true);
+
+            migrationBuilder.AddColumn<bool>(
+                name: "IsFinashed",
+                table: "Exams",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_StudentAnswers_StudentExamResults_StudentExamResultId",
+                table: "StudentAnswers",
+                column: "StudentExamResultId",
+                principalTable: "StudentExamResults",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
     }
 }

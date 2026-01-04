@@ -39,8 +39,7 @@ namespace Project.Core.Features.Exams.Commands.Handlers
                 Title = request.Title,
                 LectureId = request.LectureId,
                 Deadline = request.Deadline,
-                DurationInMinutes = request.DurationInMinutes,
-                IsFinashed = false
+                DurationInMinutes = request.DurationInMinutes
             };
             var created = await _service.CreateAsync(entity, cancellationToken);
             return Success(created.Id);
