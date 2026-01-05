@@ -26,6 +26,9 @@ namespace Project.Service.Implementations
         {
             return await _unitOfWork.StudentAnswers.GetTableAsTracking()
                 .Include(sa => sa.Question)
+                .Include(sa => sa.StudentExamResult)
+                .Include(sa => sa.SelectedOptions)
+                .ThenInclude(so => so.QuestionOption)
                 .FirstOrDefaultAsync(sa => sa.Id == id, cancellationToken);
         }
 

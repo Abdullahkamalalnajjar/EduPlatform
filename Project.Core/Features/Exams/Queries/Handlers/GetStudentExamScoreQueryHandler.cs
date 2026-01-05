@@ -34,10 +34,12 @@ namespace Project.Core.Features.Exams.Queries.Handlers
                 SubmittedAt = record.SubmittedAt,
                 StudentAnswers = answers.Select(a => new StudentAnswerSummary
                 {
+                    StudentAnswerId = a.Id,
                     QuestionId = a.QuestionId,
                     QuestionContent = a.Question?.Content ?? "Unknown",
                     QuestionType = a.Question?.QuestionType ?? "Unknown",
                     AnswerType = a.Question?.AnswerType ?? "Unknown",
+                    CorrectByAssistant = a.Question.CorrectByAssistant,
                     MaxScore = a.Question?.Score ?? 0,
                     PointsEarned = a.PointsEarned,
                     IsCorrect = a.IsCorrect,

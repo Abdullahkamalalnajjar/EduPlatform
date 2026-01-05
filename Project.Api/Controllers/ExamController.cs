@@ -70,6 +70,15 @@ namespace Project.Api.Controllers
             return NewResult(response);
         }
 
+        // Get all students who submitted exam for a lecture (for teacher grading)
+        [HttpGet(Router.LectureRouting.List + "/{lectureId}/exam-submissions")]
+        public async Task<IActionResult> GetStudentsByLectureExam(int lectureId)
+        {
+            var request = new GetStudentsByLectureExamQuery { LectureId = lectureId };
+            var response = await Mediator.Send(request);
+            return NewResult(response);
+        }
+
         // Grade exam answers (for teacher/assistant)
         [HttpPost(Router.ExamRouting.Grade)]
         public async Task<IActionResult> GradeExam([FromBody] GradeExamCommand command)

@@ -1,5 +1,3 @@
-using MediatR;
-using Project.Core.Bases;
 using Project.Core.Features.Exams.Queries.Results;
 
 namespace Project.Core.Features.Exams.Queries.Models

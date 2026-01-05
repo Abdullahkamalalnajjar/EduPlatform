@@ -1,7 +1,5 @@
-using MediatR;
 using Project.Core.Features.StudentAnswers.Commands.Models;
 using Project.Data.Entities.Exams;
-using Project.Service.Abstracts;
 
 namespace Project.Core.Features.StudentAnswers.Commands.Handlers
 {
@@ -28,7 +26,7 @@ namespace Project.Core.Features.StudentAnswers.Commands.Handlers
                 return BadRequest<int>("Image file is required");
 
             // Upload the image
-            var imageUrl = await _fileService.UploadImage("student-answers", request.ImageFile);
+            var imageUrl = await _fileService.UploadFile("student-answers", request.ImageFile);
             if (string.IsNullOrWhiteSpace(imageUrl) || imageUrl == "FailedToUploadImage" || imageUrl == "NoImage")
             {
                 return BadRequest<int>("Failed to upload image answer");

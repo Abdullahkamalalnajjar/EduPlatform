@@ -1,7 +1,4 @@
-using AutoMapper;
-using MediatR;
 using Project.Core.Features.Exams.Commands.Models;
-using Project.Service.Abstracts;
 using Project.Data.Entities.Exams;
 
 namespace Project.Core.Features.Exams.Commands.Handlers

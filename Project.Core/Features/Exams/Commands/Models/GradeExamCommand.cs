@@ -1,6 +1,3 @@
-using MediatR;
-using Project.Core.Bases;
-
 namespace Project.Core.Features.Exams.Commands.Models
 {
     public class GradeExamCommand : IRequest<Response<GradeExamResponse>>

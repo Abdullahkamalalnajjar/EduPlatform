@@ -1,6 +1,5 @@
 using Project.Core.Features.Exams.Commands.Models;
 using Project.Data.Entities.Exams;
-using Project.Service.Abstracts;
 
 namespace Project.Core.Features.Exams.Commands.Handlers
 {
