@@ -17,7 +17,10 @@
         string? PhoneNumber,
         string? FacebookUrl,
         string? TelegramUrl,
+        string? YouTubeChannelUrl,
         string? WhatsAppNumber,
-        string? PhotoUrl
+        string? PhotoUrl,
+        // assistant teacher id (nullable for non-assistant users)
+        int? TeacherId
  );
 }

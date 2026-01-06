@@ -1,6 +1,4 @@
-using MediatR;
-using Project.Core.Features.Exams.Queries.Models;
-using Project.Service.Abstracts;
+﻿using Project.Core.Features.Exams.Queries.Models;
 
 namespace Project.Core.Features.Exams.Queries.Handlers
 {
@@ -18,7 +16,7 @@ namespace Project.Core.Features.Exams.Queries.Handlers
             var submissions = await _examService.GetStudentSubmissionsByLectureAsync(request.LectureId, cancellationToken);
 
             if (!submissions.Any())
-                return NotFound<IEnumerable<StudentExamSubmissionDto>>("?? ???? ???????? ????? ???? ????????");
+                return NotFound<IEnumerable<StudentExamSubmissionDto>>("لا يوجد تسليمات");
 
             return Success<IEnumerable<StudentExamSubmissionDto>>(submissions);
         }

@@ -11,10 +11,11 @@ namespace Project.Data.Entities.People
         public ICollection<TeacherEducationStage> TeacherEducationStages { get; set; } = new List<TeacherEducationStage>();
         public int SubjectId { get; set; }
         public Subject Subject { get; set; } = null!;
-        public string PhoneNumber { get; set; } = null!;
-        public string FacebookUrl { get; set; } = null!;
-        public string TelegramUrl { get; set; } = null!;
-        public string WhatsAppNumber { get; set; } = null!;
+        public string? PhoneNumber { get; set; } = null!;
+        public string? FacebookUrl { get; set; } = null!;
+        public string? TelegramUrl { get; set; } = null!;
+        public string? YouTubeChannelUrl { get; set; } = null!;
+        public string? WhatsAppNumber { get; set; } = null!;
         public string? PhotoUrl { get; set; }
         public ICollection<Course> Courses { get; set; } = new List<Course>();
     }

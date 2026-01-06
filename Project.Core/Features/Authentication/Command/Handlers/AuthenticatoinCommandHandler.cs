@@ -115,6 +115,7 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                             PhoneNumber = request.PhoneNumber ?? string.Empty,
                             FacebookUrl = request.FacebookUrl ?? string.Empty,
                             TelegramUrl = request.TelegramUrl ?? string.Empty,
+                            YouTubeChannelUrl = request.YouTubeChannelUrl ?? string.Empty,
                             WhatsAppNumber = request.WhatsAppNumber ?? string.Empty,
                             PhotoUrl = photoUrl
                         };
@@ -146,12 +147,43 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                         break;
 
                     case "parent":
+                        var parentPhone = request.ParentPhoneNumber ?? string.Empty;
+
+                        // Validate parent phone number is provided
+                        if (string.IsNullOrEmpty(parentPhone))
+                        {
+                            await transaction.RollbackAsync();
+                            return BadRequest<AuthResponse>("Parent phone number is required.");
+                        }
+
+                        // Find existing students that have the same parent phone number
+                        var studentsToLink = await _unitOfWork.Students.GetTableAsTracking()
+                            .Where(s => s.ParentPhoneNumber == parentPhone)
+                            .ToListAsync(cancellationToken);
+
+                        // Check if any students were found
+                        if (!studentsToLink.Any())
+                        {
+                            await transaction.RollbackAsync();
+                            return BadRequest<AuthResponse>("لم يتم العثور على أي طلاب مطابقين لرقم هاتف ولي الأمر هذا");
+                        }
+
                         var parent = new Parent
                         {
                             ApplicationUserId = newUser.Id,
-                            ParentPhoneNumber = request.ParentPhoneNumberOfParent ?? string.Empty
+                            ParentPhoneNumber = parentPhone
                         };
+
+                        // Add parent to context
                         await _unitOfWork.Parents.AddAsync(parent, cancellationToken);
+
+                        // Link students to this parent
+                        foreach (var s in studentsToLink)
+                        {
+                            s.Parent = parent;
+                            _unitOfWork.Students.Update(s);
+                        }
+
                         break;
 
                     case "assistant":
@@ -251,164 +283,3 @@ namespace Project.Core.Features.Authentication.Command.Handlers
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -78,10 +78,14 @@ namespace Project.Service.Implementations
         public static Expression<Func<CourseSubscription, CourseSubscriptionDto>> ToCourseSubscriptionDto =>
             cs => new CourseSubscriptionDto
             {
+                CourseSubscriptionId = cs.Id,
                 StudentId = cs.StudentId,
                 StudentName = cs.Student.User.FullName,
                 CourseId = cs.CourseId,
                 CourseName = cs.Course.Title,
+                TeacherName = cs.Course.Teacher.User.FullName,
+                EducationStageId = cs.Course.EducationStageId,
+                EducationStageName = cs.Course.EducationStage.Name,
                 Status = cs.Status,
                 CreatedAt = cs.CreatedAt,
                 Lectures = cs.Course.Lectures.Select(l => new LectureDto

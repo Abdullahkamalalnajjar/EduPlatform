@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Project.Api.Base;
 using Project.Core.Features.Authentication.Command.Models;
 using Project.Data.AppMetaData;
@@ -41,6 +42,14 @@ namespace Project.Api.Controllers
         }
         [HttpPost(Router.AuthenticationRouting.ResendConfirmEmail)]
         public async Task<IActionResult> ResendConfirmEmail(ResendConfirmEmailCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return NewResult(response);
+        }
+
+        [Authorize]
+        [HttpPost("RegisterAssistant")]
+        public async Task<IActionResult> RegisterAssistant([FromBody] RegisterAssistantCommand command)
         {
             var response = await Mediator.Send(command);
             return NewResult(response);

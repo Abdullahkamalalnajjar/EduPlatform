@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Project.Data.Entities.People;
 using Project.Data.Interfaces;
 using Project.Service.Abstracts;
+using Project.Data.Dtos;
 
 namespace Project.Service.Implementations
 {
@@ -28,6 +29,26 @@ namespace Project.Service.Implementations
                 .Include(p => p.User)
                 .Include(p => p.Children)
                 .SingleOrDefaultAsync(p => p.Id == id, cancellationToken);
+        }
+
+        public async Task<IEnumerable<ParentStudentDto>> GetStudentsByParentIdAsync(int parentId, CancellationToken cancellationToken = default)
+        {
+            return await _unitOfWork.Parents.GetTableNoTracking()
+                .Include(p => p.Children)
+                .ThenInclude(s => s.User)
+                .Where(p => p.Id == parentId)
+                .SelectMany(p => p.Children)
+                .Select(s => new ParentStudentDto
+                {
+                    StudentId = s.Id,
+                    UserId = s.ApplicationUserId,
+                    Email = s.User.Email,
+                    FirstName = s.User.FirstName,
+                    LastName = s.User.LastName,
+                    FullName = s.User.FullName,
+                    GradeYear = s.GradeYear
+                })
+                .ToListAsync(cancellationToken);
         }
 
         public async Task<Parent> CreateAsync(Parent entity, CancellationToken cancellationToken = default)

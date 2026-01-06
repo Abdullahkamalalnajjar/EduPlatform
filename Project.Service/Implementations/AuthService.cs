@@ -48,16 +48,28 @@ namespace Project.Service.Implementations
 
             // determine numeric profile id if exists
             int? profileId = null;
+            int? assistantTeacherId = null;
+            
             var teacher = await _context.Teachers.Where(t => t.ApplicationUserId == user.Id)
-                .Select(t => new { t.Id, t.PhoneNumber, t.FacebookUrl, t.TelegramUrl, t.WhatsAppNumber, t.PhotoUrl })
+                .Select(t => new { t.Id, t.PhoneNumber, t.FacebookUrl, t.TelegramUrl, t.YouTubeChannelUrl, t.WhatsAppNumber, t.PhotoUrl })
                 .FirstOrDefaultAsync(cancellationToken);
 
             var teacherId = teacher?.Id;
             var studentId = await _context.Students.Where(s => s.ApplicationUserId == user.Id).Select(s => (int?)s.Id).FirstOrDefaultAsync(cancellationToken);
             var parentId = await _context.Parents.Where(p => p.ApplicationUserId == user.Id).Select(p => (int?)p.Id).FirstOrDefaultAsync(cancellationToken);
-            var assistantId = await _context.Assistants.Where(a => a.ApplicationUserId == user.Id).Select(a => (int?)a.Id).FirstOrDefaultAsync(cancellationToken);
+            var assistant = await _context.Assistants.Where(a => a.ApplicationUserId == user.Id)
+                .Select(a => new { a.Id, a.TeacherId })
+                .FirstOrDefaultAsync(cancellationToken);
 
-            profileId = teacherId ?? studentId ?? parentId ?? assistantId;
+            if (assistant != null)
+            {
+                profileId = assistant.Id;
+                assistantTeacherId = assistant.TeacherId;
+            }
+            else
+            {
+                profileId = teacherId ?? studentId ?? parentId;
+            }
 
             var response = new AuthResponse(
                 Id: user.Id,
@@ -74,8 +86,10 @@ namespace Project.Service.Implementations
                 PhoneNumber: teacher?.PhoneNumber,
                 FacebookUrl: teacher?.FacebookUrl,
                 TelegramUrl: teacher?.TelegramUrl,
+                YouTubeChannelUrl: teacher?.YouTubeChannelUrl,
                 WhatsAppNumber: teacher?.WhatsAppNumber,
-                PhotoUrl: teacher?.PhotoUrl
+                PhotoUrl: teacher?.PhotoUrl,
+                TeacherId: assistantTeacherId // ✅ إرجاع المعلم الخاص بـ Assistant
             );
 
             return AuthResult.Success(response);
@@ -111,16 +125,28 @@ namespace Project.Service.Implementations
 
             // determine numeric profile id if exists
             int? profileId = null;
+            int? assistantTeacherId = null;
+            
             var teacher = await _context.Teachers.Where(t => t.ApplicationUserId == user.Id)
-                .Select(t => new { t.Id, t.PhoneNumber, t.FacebookUrl, t.TelegramUrl, t.WhatsAppNumber, t.PhotoUrl })
+                .Select(t => new { t.Id, t.PhoneNumber, t.FacebookUrl, t.TelegramUrl, t.YouTubeChannelUrl, t.WhatsAppNumber, t.PhotoUrl })
                 .FirstOrDefaultAsync(cancellationToken);
 
             var teacherId2 = teacher?.Id;
             var studentId2 = await _context.Students.Where(s => s.ApplicationUserId == user.Id).Select(s => (int?)s.Id).FirstOrDefaultAsync(cancellationToken);
             var parentId2 = await _context.Parents.Where(p => p.ApplicationUserId == user.Id).Select(p => (int?)p.Id).FirstOrDefaultAsync(cancellationToken);
-            var assistantId2 = await _context.Assistants.Where(a => a.ApplicationUserId == user.Id).Select(a => (int?)a.Id).FirstOrDefaultAsync(cancellationToken);
+            var assistant = await _context.Assistants.Where(a => a.ApplicationUserId == user.Id)
+                .Select(a => new { a.Id, a.TeacherId })
+                .FirstOrDefaultAsync(cancellationToken);
 
-            profileId = teacherId2 ?? studentId2 ?? parentId2 ?? assistantId2;
+            if (assistant != null)
+            {
+                profileId = assistant.Id;
+                assistantTeacherId = assistant.TeacherId;
+            }
+            else
+            {
+                profileId = teacherId2 ?? studentId2 ?? parentId2;
+            }
 
             // return the response
             var response = new AuthResponse(
@@ -138,8 +164,10 @@ namespace Project.Service.Implementations
                 PhoneNumber: teacher?.PhoneNumber,
                 FacebookUrl: teacher?.FacebookUrl,
                 TelegramUrl: teacher?.TelegramUrl,
+                YouTubeChannelUrl: teacher?.YouTubeChannelUrl,
                 WhatsAppNumber: teacher?.WhatsAppNumber,
-                PhotoUrl: teacher?.PhotoUrl
+                PhotoUrl: teacher?.PhotoUrl,
+                TeacherId: assistantTeacherId // ✅ إرجاع المعلم الخاص بـ Assistant
             );
             return response;
 

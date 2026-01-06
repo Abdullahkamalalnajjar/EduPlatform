@@ -4,6 +4,7 @@ using Project.Core.Features.Users.Queries.Models;
 using Project.Data.Consts;
 using Project.Data.Filters;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Project.Api.Controllers
 {
@@ -29,6 +30,14 @@ namespace Project.Api.Controllers
         {
             var request = new GetUserByIdQuery { UserId = userId };
             var response = await Mediator.Send(request);
+            return NewResult(response);
+        }
+
+        [Authorize]
+        [HttpPost("ApproveTeacher")]
+        public async Task<IActionResult> ApproveTeacher([FromBody] ApproveTeacherAccountCommand command)
+        {
+            var response = await Mediator.Send(command);
             return NewResult(response);
         }
     }

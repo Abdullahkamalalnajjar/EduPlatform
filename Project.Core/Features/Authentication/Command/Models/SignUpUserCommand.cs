@@ -21,6 +21,7 @@
         public string? PhoneNumber { get; set; }
         public string? FacebookUrl { get; set; }
         public string? TelegramUrl { get; set; }
+        public string? YouTubeChannelUrl { get; set; } // ✅ أضفنا هذا
         public string? WhatsAppNumber { get; set; }
         // profile photo file uploaded
         public IFormFile? PhotoFile { get; set; }

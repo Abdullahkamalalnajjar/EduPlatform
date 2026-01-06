@@ -18,7 +18,7 @@ namespace Project.Api.Controllers
         }
 
         [HttpPut("EditUserProfile")]
-        public async Task<IActionResult> UpdateInfo(EditApplicationUserCommand command)
+        public async Task<IActionResult> UpdateInfo([FromForm] EditApplicationUserCommand command)
         {
             var response = await Mediator.Send(command);
             return NewResult(response);
