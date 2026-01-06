@@ -1,8 +1,4 @@
-using Microsoft.EntityFrameworkCore;
 using Project.Data.Entities.People;
-using Project.Data.Interfaces;
-using Project.Service.Abstracts;
-using Project.Data.Dtos;
 
 namespace Project.Service.Implementations
 {
@@ -36,6 +32,9 @@ namespace Project.Service.Implementations
             return await _unitOfWork.Parents.GetTableNoTracking()
                 .Include(p => p.Children)
                 .ThenInclude(s => s.User)
+                .Include(p => p.Children)
+                .ThenInclude(s => s.CourseSubscriptions)
+                .ThenInclude(cs => cs.Course)
                 .Where(p => p.Id == parentId)
                 .SelectMany(p => p.Children)
                 .Select(s => new ParentStudentDto
@@ -46,7 +45,14 @@ namespace Project.Service.Implementations
                     FirstName = s.User.FirstName,
                     LastName = s.User.LastName,
                     FullName = s.User.FullName,
-                    GradeYear = s.GradeYear
+                    GradeYear = s.GradeYear,
+                    Courses = s.CourseSubscriptions.Select(cs => new StudentCourseDto
+                    {
+                        CourseId = cs.Course.Id,
+                        CourseTitle = cs.Course.Title,
+                        Status = cs.Status,
+                        CreatedAt = cs.CreatedAt
+                    }).ToList()
                 })
                 .ToListAsync(cancellationToken);
         }

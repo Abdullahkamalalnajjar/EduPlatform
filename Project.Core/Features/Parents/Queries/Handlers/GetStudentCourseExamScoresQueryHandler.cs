@@ -1,7 +1,4 @@
-using MediatR;
 using Project.Core.Features.Parents.Queries.Models;
-using Project.Service.Abstracts;
-using Project.Data.Dtos;
 
 namespace Project.Core.Features.Parents.Queries.Handlers
 {
@@ -43,6 +40,8 @@ namespace Project.Core.Features.Parents.Queries.Handlers
                     var answers = await _answerService.GetByStudentExamResultIdAsync(result.Id, cancellationToken);
                     var maxScore = exam.Questions?.Sum(q => q.Score) ?? 0;
                     var correctAnswers = answers.Count(a => a.IsCorrect);
+                    // round percentage to 2 decimal places
+
                     var percentage = maxScore > 0 ? (decimal)result.TotalScore / maxScore * 100 : 0;
 
                     dtos.Add(new StudentCourseExamDto
@@ -55,7 +54,7 @@ namespace Project.Core.Features.Parents.Queries.Handlers
                         SubmittedAt = result.SubmittedAt,
                         CorrectAnswers = correctAnswers,
                         TotalQuestions = answers.Count(),
-                        Percentage = percentage
+                        Percentage = Math.Round(percentage, 2)
                     });
                 }
             }

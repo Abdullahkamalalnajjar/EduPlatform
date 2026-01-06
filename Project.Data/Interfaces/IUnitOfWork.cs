@@ -14,6 +14,7 @@ namespace Project.Data.Interfaces
         IParentRepository Parents { get; }
         ITeacherRepository Teachers { get; }
         IAssistantRepository Assistants { get; }
+        IAdminRepository Admins { get; }
 
         ISubjectRepository Subjects { get; }
         ICourseRepository Courses { get; }

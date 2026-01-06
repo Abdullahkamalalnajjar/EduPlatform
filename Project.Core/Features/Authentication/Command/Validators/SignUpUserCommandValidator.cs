@@ -41,12 +41,17 @@ namespace Project.Core.Features.Authentication.Command.Validators
             {
                 RuleFor(x => x.TeacherId).NotNull().WithMessage("TeacherId is required for assistant");
             });
+
+            When(x => string.Equals(x.Role, DefaultRoles.Admin, StringComparison.OrdinalIgnoreCase), () =>
+            {
+                // Admin role doesn't require any additional fields
+            });
         }
 
         private bool BeAValidRole(string role)
         {
             if (string.IsNullOrWhiteSpace(role)) return false;
-            var allowed = new[] { DefaultRoles.Student, DefaultRoles.Teacher, DefaultRoles.Parent, DefaultRoles.Assistant };
+            var allowed = new[] { DefaultRoles.Student, DefaultRoles.Teacher, DefaultRoles.Parent, DefaultRoles.Assistant, DefaultRoles.Admin };
             return allowed.Any(r => string.Equals(r, role, StringComparison.OrdinalIgnoreCase));
         }
     }

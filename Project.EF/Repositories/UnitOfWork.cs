@@ -16,6 +16,7 @@ namespace Project.EF.Repositories
         public IParentRepository Parents { get; private set; }
         public ITeacherRepository Teachers { get; private set; }
         public IAssistantRepository Assistants { get; private set; }
+        public IAdminRepository Admins { get; private set; }
 
         public ISubjectRepository Subjects { get; private set; }
         public ICourseRepository Courses { get; private set; }
@@ -45,6 +46,7 @@ namespace Project.EF.Repositories
             Parents = new ParentRepository(_context);
             Teachers = new TeacherRepository(_context);
             Assistants = new AssistantRepository(_context);
+            Admins = new AdminRepository(_context);
 
             Subjects = new SubjectRepository(_context);
             Courses = new CourseRepository(_context);

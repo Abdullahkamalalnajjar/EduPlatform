@@ -32,6 +32,7 @@ namespace Project.EF
         public DbSet<Parent> Parents { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Assistant> Assistants { get; set; }
+        public DbSet<Admin> Admins { get; set; }
 
         // Curriculum
         public DbSet<Subject> Subjects { get; set; }

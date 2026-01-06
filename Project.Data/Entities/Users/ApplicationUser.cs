@@ -17,5 +17,6 @@ namespace Project.Data.Entities.Users
         public Parent? ParentProfile { get; set; }
         public Teacher? TeacherProfile { get; set; }
         public Assistant? AssistantProfile { get; set; }
+        public Admin? AdminProfile { get; set; }
     }
 }

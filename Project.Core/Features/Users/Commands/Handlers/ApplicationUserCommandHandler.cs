@@ -143,19 +143,21 @@ namespace Project.Core.Features.Users.Commands.Handlers
             if (teacher == null)
                 return NotFound<string>("Teacher profile not found");
 
-            // Update teacher as approved (assuming you have an IsApproved field)
-            // If you need to add IsApproved field to Teacher entity, do that first
-            // For now, we'll enable the user account if it was disabled
-            user.IsDisable = false;
+            // Update teacher account status based on IsApproved flag
+            user.IsDisable = !request.IsApproved;  // Set IsDisable to opposite of IsApproved
             
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                return BadRequest<string>($"Failed to approve teacher: {errors}");
+                return BadRequest<string>($"Failed to update teacher account: {errors}");
             }
 
-            return Success<string>("Teacher account approved successfully");
+            var statusMessage = request.IsApproved 
+                ? "Teacher account approved and enabled successfully" 
+                : "Teacher account disabled successfully";
+
+            return Success<string>(statusMessage);
         }
         #endregion
 

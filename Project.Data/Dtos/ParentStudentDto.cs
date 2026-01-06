@@ -9,6 +9,15 @@ namespace Project.Data.Dtos
         public string LastName { get; set; } = null!;
         public string FullName { get; set; } = null!;
         public int GradeYear { get; set; }
+        public ICollection<StudentCourseDto> Courses { get; set; } = new List<StudentCourseDto>();
+    }
+
+    public class StudentCourseDto
+    {
+        public int CourseId { get; set; }
+        public string CourseTitle { get; set; } = null!;
+        public string Status { get; set; } = null!;
+        public DateTime CreatedAt { get; set; }
     }
 
     public class StudentCourseExamDto

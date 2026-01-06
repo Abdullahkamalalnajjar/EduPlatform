@@ -90,6 +90,7 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                         break;
 
                     case "teacher":
+                        newUser.IsDisable = true;
                         if (!request.SubjectId.HasValue)
                         {
                             await transaction.RollbackAsync();
@@ -198,6 +199,14 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                             TeacherId = request.TeacherId.Value
                         };
                         await _unitOfWork.Assistants.AddAsync(assistant, cancellationToken);
+                        break;
+
+                    case "admin":
+                        var admin = new Admin
+                        {
+                            ApplicationUserId = newUser.Id
+                        };
+                        await _unitOfWork.Admins.AddAsync(admin, cancellationToken);
                         break;
 
                     default:
