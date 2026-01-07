@@ -20,7 +20,16 @@ namespace Project.Core.Features.Courses.Queries.Handlers
         public async Task<Response<IEnumerable<CourseResponse>>> Handle(GetAllCoursesQuery request, CancellationToken cancellationToken)
         {
             var courses = await _courseService.GetAllAsync(cancellationToken);
-            var result = courses.Select(c => new CourseResponse { Id = c.Id, Title = c.Title, EducationStageName = c.EducationStage.Name, TeacherId = c.TeacherId, EducationStageId = c.EducationStageId }).ToList();
+            var result = courses.Select(c => new CourseResponse
+            {
+                Id = c.Id,
+                Title = c.Title,
+                EducationStageName = c.EducationStage.Name,
+                TeacherId = c.TeacherId,
+                EducationStageId = c.EducationStageId,
+                Price = c.Price,
+                DiscountedPrice = c.DiscountedPrice
+            }).ToList();
             return Success<IEnumerable<CourseResponse>>(result);
         }
 
@@ -28,7 +37,16 @@ namespace Project.Core.Features.Courses.Queries.Handlers
         {
             var course = await _courseService.GetByIdAsync(request.Id, cancellationToken);
             if (course is null) return NotFound<CourseResponse>("Course not found");
-            var resp = new CourseResponse { Id = course.Id, Title = course.Title, EducationStageName = course.EducationStage.Name, TeacherId = course.TeacherId, EducationStageId = course.EducationStageId };
+            var resp = new CourseResponse
+            {
+                Id = course.Id,
+                Title = course.Title,
+                EducationStageName = course.EducationStage.Name,
+                TeacherId = course.TeacherId,
+                EducationStageId = course.EducationStageId,
+                Price = course.Price,
+                DiscountedPrice = course.DiscountedPrice
+            };
             return Success(resp);
         }
 

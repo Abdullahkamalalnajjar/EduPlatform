@@ -1,5 +1,4 @@
-﻿
-using Project.Data.Entities.Users;
+﻿using Project.Data.Entities.Users;
 
 namespace Project.Service.Implementations
 {
@@ -83,6 +82,65 @@ namespace Project.Service.Implementations
         {
             await _userManager.UpdateAsync(user);
             return "Updated";
+        }
+
+        public async Task<string> DeleteUserAsync(string userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                    return "UserNotFound";
+
+                // Delete Student profile if exists
+                var student = await _context.Students.FirstOrDefaultAsync(s => s.ApplicationUserId == userId);
+                if (student != null)
+                {
+                    _context.Students.Remove(student);
+                }
+
+                // Delete Parent profile if exists
+                var parent = await _context.Parents.FirstOrDefaultAsync(p => p.ApplicationUserId == userId);
+                if (parent != null)
+                {
+                    _context.Parents.Remove(parent);
+                }
+
+                // Delete Teacher profile if exists (this will cascade delete courses, lectures, etc.)
+                var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.ApplicationUserId == userId);
+                if (teacher != null)
+                {
+                    _context.Teachers.Remove(teacher);
+                }
+
+                // Delete Admin profile if exists
+                var admin = await _context.Admins.FirstOrDefaultAsync(a => a.ApplicationUserId == userId);
+                if (admin != null)
+                {
+                    _context.Admins.Remove(admin);
+                }
+
+                // Delete Assistant profile if exists
+                var assistant = await _context.Assistants.FirstOrDefaultAsync(a => a.ApplicationUserId == userId);
+                if (assistant != null)
+                {
+                    _context.Assistants.Remove(assistant);
+                }
+
+                // Save all deletions first
+                await _context.SaveChangesAsync();
+
+                // Now delete the user
+                var result = await _userManager.DeleteAsync(user);
+                if (!result.Succeeded)
+                    return result.Errors.FirstOrDefault()?.Description ?? "FailedToDeleteUser";
+
+                return "Deleted";
+            }
+            catch (Exception ex)
+            {
+                return $"Error: {ex.Message}";
+            }
         }
     }
 

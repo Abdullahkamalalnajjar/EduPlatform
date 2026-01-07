@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Core.Bases;
+using Project.Core.Features.Admin.Queries.Models;
 using Project.Core.Features.Users.Queries.Models;
 using Project.Data.Dtos;
 
@@ -148,6 +149,38 @@ namespace Project.Api.Controllers
                 {
                     Succeeded = false,
                     Message = $"Error retrieving parents: {ex.Message}"
+                });
+            }
+        }
+
+        /// <summary>
+        /// Get dashboard statistics - Admin only
+        /// </summary>
+        /// <returns>Statistics for teachers, students, parents, exams, courses, and users</returns>
+        [HttpGet("statistics")]
+        [ProducesResponseType(typeof(Response<AdminStatisticsResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Response<AdminStatisticsResponse>), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetStatistics(CancellationToken cancellationToken)
+        {
+            try
+            {
+                var query = new GetAdminStatisticsQuery();
+                var result = await _mediator.Send(query, cancellationToken);
+                
+                if (!result.Succeeded)
+                    return BadRequest(result);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving dashboard statistics");
+                return BadRequest(new Response<AdminStatisticsResponse>
+                {
+                    Succeeded = false,
+                    Message = $"Error retrieving statistics: {ex.Message}"
                 });
             }
         }

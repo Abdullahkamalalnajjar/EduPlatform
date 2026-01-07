@@ -36,7 +36,9 @@ namespace Project.Core.Features.Courses.Commands.Handlers
                 Title = request.Title,
                 TeacherId = request.TeacherId,
                 EducationStageId = request.EducationStageId,
-                CourseImageUrl = imageUrl
+                CourseImageUrl = imageUrl,
+                Price = request.Price,
+                DiscountedPrice = request.DiscountedPrice
             };
             var created = await _courseService.CreateAsync(course, cancellationToken);
             return Success(created.Id);
@@ -60,6 +62,8 @@ namespace Project.Core.Features.Courses.Commands.Handlers
             course.Title = request.Title;
             course.TeacherId = request.TeacherId;
             course.EducationStageId = request.EducationStageId;
+            course.Price = request.Price;
+            course.DiscountedPrice = request.DiscountedPrice;
             var updated = await _courseService.UpdateAsync(course, cancellationToken);
             return Success(updated.Id);
         }

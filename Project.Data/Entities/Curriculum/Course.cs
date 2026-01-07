@@ -9,6 +9,9 @@ namespace Project.Data.Entities.Curriculum
 
         public string CourseImageUrl { get; set; } = null!;
 
+        public decimal? Price { get; set; }
+        public decimal? DiscountedPrice { get; set; }
+
         public int TeacherId { get; set; }
         public Project.Data.Entities.People.Teacher Teacher { get; set; } = null!;
 

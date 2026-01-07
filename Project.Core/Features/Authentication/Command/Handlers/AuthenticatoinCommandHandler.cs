@@ -202,7 +202,7 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                         break;
 
                     case "admin":
-                        var admin = new Admin
+                        var admin = new Project.Data.Entities.People.Admin
                         {
                             ApplicationUserId = newUser.Id
                         };

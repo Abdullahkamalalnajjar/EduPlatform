@@ -24,6 +24,8 @@ namespace Project.Core.Features.Teachers.Queries.Results
         public string Title { get; set; } = null!;
         public string CourseImageUrl { get; set; } = null!;
         public string EducationStageName { get; set; } = null!;
+        public decimal? Price { get; set; }
+        public decimal? DiscountedPrice { get; set; }
         public List<LectureDtoo> Lectures { get; set; } = new();
     }
 

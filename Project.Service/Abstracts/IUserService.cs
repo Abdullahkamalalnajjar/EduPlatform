@@ -10,7 +10,6 @@ namespace Project.Service.Abstracts
         public Task<string> UpdateProfileUser(ApplicationUser user);
         public Task<string> CreateUserAsync(string email, string firstName, string LastName, string password, IList<string> roles);
         public Task<string> UpdateUserAsync(ApplicationUser user, IList<string> roles);
-
-
+        public Task<string> DeleteUserAsync(string userId);
     }
 }

@@ -12,6 +12,8 @@
         public string TelegramUrl { get; set; } = null!;
         public int TeacherId { get; set; }
         public string TeacherName { get; set; } = null!;
+        public decimal? Price { get; set; }
+        public decimal? DiscountedPrice { get; set; }
 
         public ICollection<LectureDto> Lectures { get; set; } = new List<LectureDto>();
     }

@@ -65,6 +65,8 @@ namespace Project.Service.Implementations
                     EducationStageId = c.EducationStageId,
                     EducationStageName = c.EducationStage.Name,
                     CourseImageUrl = c.CourseImageUrl,
+                    Price = c.Price,
+                    DiscountedPrice = c.DiscountedPrice,
                     Lectures = c.Lectures.Select(l => new LectureDto
                     {
                         Id = l.Id,

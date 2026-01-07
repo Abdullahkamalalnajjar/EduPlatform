@@ -7,5 +7,7 @@ namespace Project.Core.Features.Courses.Queries.Results
         public int TeacherId { get; set; }
         public int EducationStageId { get; set; }
         public string EducationStageName { get; set; } = null!;
+        public decimal? Price { get; set; }
+        public decimal? DiscountedPrice { get; set; }
     }
 }

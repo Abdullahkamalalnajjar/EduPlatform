@@ -10,6 +10,14 @@ namespace Project.EF.Configurations
 
             builder.Property(x => x.Title).IsRequired().HasMaxLength(300);
 
+            builder.Property(x => x.Price)
+                .HasColumnType("decimal(18,2)")
+                .IsRequired(false);
+
+            builder.Property(x => x.DiscountedPrice)
+                .HasColumnType("decimal(18,2)")
+                .IsRequired(false);
+
             builder.HasOne(x => x.Teacher)
                 .WithMany(t => t.Courses)
                 .HasForeignKey(x => x.TeacherId)

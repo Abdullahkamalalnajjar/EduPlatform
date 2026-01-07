@@ -33,14 +33,14 @@ namespace Project.Api.Controllers
         }
 
         [HttpPost(Router.SubjectRouting.Create)]
-        public async Task<IActionResult> Create([FromBody] CreateSubjectCommand command)
+        public async Task<IActionResult> Create([FromForm] CreateSubjectCommand command)
         {
             var response = await Mediator.Send(command);
             return NewResult(response);
         }
 
         [HttpPut(Router.SubjectRouting.Edit)]
-        public async Task<IActionResult> Edit([FromBody] EditSubjectCommand command)
+        public async Task<IActionResult> Edit([FromForm] EditSubjectCommand command)
         {
             var response = await Mediator.Send(command);
             return NewResult(response);

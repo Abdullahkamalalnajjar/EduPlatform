@@ -6,7 +6,8 @@ namespace Project.Core.Features.Users.Commands.Handlers
         IRequestHandler<EditApplicationUserCommand, Response<string>>,
         IRequestHandler<CreateUserCommand, Response<string>>,
         IRequestHandler<UpdateUserCommand, Response<string>>,
-        IRequestHandler<ApproveTeacherAccountCommand, Response<string>>
+        IRequestHandler<ApproveTeacherAccountCommand, Response<string>>,
+        IRequestHandler<DeleteUserCommand, Response<string>>
 
     {
         private readonly IUserService _userService = userService;
@@ -28,7 +29,7 @@ namespace Project.Core.Features.Users.Commands.Handlers
             // Update basic info
             if (!string.IsNullOrWhiteSpace(request.FirstName))
                 user.FirstName = request.FirstName;
-            
+
             if (!string.IsNullOrWhiteSpace(request.LastName))
                 user.LastName = request.LastName;
 
@@ -47,16 +48,16 @@ namespace Project.Core.Features.Users.Commands.Handlers
                     // Update teacher profile URLs
                     if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
                         teacher.PhoneNumber = request.PhoneNumber;
-                    
+
                     if (!string.IsNullOrWhiteSpace(request.FacebookUrl))
                         teacher.FacebookUrl = request.FacebookUrl;
-                    
+
                     if (!string.IsNullOrWhiteSpace(request.TelegramUrl))
                         teacher.TelegramUrl = request.TelegramUrl;
-                    
+
                     if (!string.IsNullOrWhiteSpace(request.YouTubeChannelUrl))
                         teacher.YouTubeChannelUrl = request.YouTubeChannelUrl;
-                    
+
                     if (!string.IsNullOrWhiteSpace(request.WhatsAppNumber))
                         teacher.WhatsAppNumber = request.WhatsAppNumber;
 
@@ -136,16 +137,17 @@ namespace Project.Core.Features.Users.Commands.Handlers
             if (!userRoles.Contains("Teacher"))
                 return BadRequest<string>("This user is not a teacher");
 
-            // Find the teacher profile
+            // Find the teacher profile to validate existence
             var teacher = await _context.Teachers
                 .FirstOrDefaultAsync(t => t.ApplicationUserId == request.TeacherUserId, cancellationToken);
-            
+
             if (teacher == null)
                 return NotFound<string>("Teacher profile not found");
 
-            // Update teacher account status based on IsApproved flag
-            user.IsDisable = !request.IsApproved;  // Set IsDisable to opposite of IsApproved
-            
+            // Auto-toggle the teacher account status
+            user.IsDisable = !user.IsDisable;  // Toggle: true becomes false, false becomes true
+
+            // Update user in database
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
@@ -153,11 +155,29 @@ namespace Project.Core.Features.Users.Commands.Handlers
                 return BadRequest<string>($"Failed to update teacher account: {errors}");
             }
 
-            var statusMessage = request.IsApproved 
-                ? "Teacher account approved and enabled successfully" 
-                : "Teacher account disabled successfully";
+            var statusMessage = user.IsDisable
+                ? "Teacher account approved and enabled successfully"
+                : " Teacher account disabled successfully";
 
             return Success<string>(statusMessage);
+        }
+        #endregion
+
+        #region DeleteUser
+        public async Task<Response<string>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+        {
+            var result = await _userService.DeleteUserAsync(request.UserId);
+            
+            if (result == "UserNotFound")
+                return NotFound<string>("User not found");
+            
+            if (result == "Deleted")
+                return Success<string>("User has been deleted successfully");
+            
+            if (result.StartsWith("Error:"))
+                return BadRequest<string>(result);
+            
+            return BadRequest<string>(result);
         }
         #endregion
 

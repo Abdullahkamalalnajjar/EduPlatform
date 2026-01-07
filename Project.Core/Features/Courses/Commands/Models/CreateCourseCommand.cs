@@ -7,5 +7,8 @@ namespace Project.Core.Features.Courses.Commands.Models
         public IFormFile? CourseImageUrl { get; set; }
 
         public int EducationStageId { get; set; }
+
+        public decimal? Price { get; set; }
+        public decimal? DiscountedPrice { get; set; }
     }
 }

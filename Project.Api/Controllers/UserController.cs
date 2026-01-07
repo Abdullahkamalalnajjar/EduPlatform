@@ -1,10 +1,10 @@
-﻿using Project.Api.Base;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Project.Api.Base;
 using Project.Core.Features.Users.Commands.Models;
 using Project.Core.Features.Users.Queries.Models;
 using Project.Data.Consts;
 using Project.Data.Filters;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Project.Api.Controllers
 {
@@ -34,9 +34,18 @@ namespace Project.Api.Controllers
         }
 
         [Authorize]
-        [HttpPost("ApproveTeacher")]
+        [HttpPost("ToggleBlockUser")]
         public async Task<IActionResult> ApproveTeacher([FromBody] ApproveTeacherAccountCommand command)
         {
+            var response = await Mediator.Send(command);
+            return NewResult(response);
+        }
+
+        [Authorize]
+        [HttpDelete("DeleteUser/{userId}")]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            var command = new DeleteUserCommand { UserId = userId };
             var response = await Mediator.Send(command);
             return NewResult(response);
         }

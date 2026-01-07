@@ -4,5 +4,6 @@ namespace Project.Core.Features.Subjects.Commands.Models
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
+        public IFormFile? SubjectImageFile { get; set; }
     }
 }
