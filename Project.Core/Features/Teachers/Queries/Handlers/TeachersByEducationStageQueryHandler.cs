@@ -40,8 +40,8 @@ namespace Project.Core.Features.Teachers.Queries.Handlers
                     Title = c.Title,
                     EducationStageName = c.EducationStage?.Name ?? "Unknown",
                     CourseImageUrl = c.CourseImageUrl,
-                    Price = c.Price,
-                    DiscountedPrice = c.DiscountedPrice,
+                    Price = c.Price ?? 0,
+                    DiscountedPrice = c.DiscountedPrice ?? 0,
                     Lectures = c.Lectures?.Where(l => l != null).Select(l => new LectureDtoo
                     {
                         Id = l.Id,

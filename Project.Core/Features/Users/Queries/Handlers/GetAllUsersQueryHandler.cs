@@ -45,7 +45,7 @@ namespace Project.Core.Features.Users.Queries.Handlers
                         PhotoUrl = t.PhotoUrl,
                         SubjectId = t.SubjectId,
                         SubjectName = t.Subject.Name,
-                        IsVerified = t.User.IsDisable
+                        IsDisable = t.User.IsDisable
                     })
                     .ToListAsync(cancellationToken);
 

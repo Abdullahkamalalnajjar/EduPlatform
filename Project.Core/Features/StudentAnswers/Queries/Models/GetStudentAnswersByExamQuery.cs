@@ -18,9 +18,11 @@ namespace Project.Core.Features.StudentAnswers.Queries.Models
         public string? SelectedOptionIds { get; set; }
         public string? TextAnswer { get; set; }
         public string? ImageAnswerUrl { get; set; }
-        public int? PointsEarned { get; set; }
+        public decimal? PointsEarned { get; set; } // ???? ??????? ???????
         public bool IsCorrect { get; set; }
         public int MaxScore { get; set; }
+        public string? Feedback { get; set; } // ??????? ??????
+        public string? GradedByName { get; set; } // ??? ??????
         public IEnumerable<OptionDto> QuestionOptions { get; set; } = new List<OptionDto>();
     }
 

@@ -31,7 +31,7 @@ namespace Project.Data.Dtos
         public string? PhotoUrl { get; set; }
         public int SubjectId { get; set; }
         public string? SubjectName { get; set; }
-        public bool? IsVerified { get; set; }
+        public bool? IsDisable { get; set; }
     }
 
     public class UserParentDto

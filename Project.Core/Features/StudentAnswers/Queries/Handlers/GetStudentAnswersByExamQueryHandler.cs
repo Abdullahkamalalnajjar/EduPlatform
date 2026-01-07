@@ -7,10 +7,12 @@ namespace Project.Core.Features.StudentAnswers.Queries.Handlers
     public class GetStudentAnswersByExamQueryHandler : ResponseHandler, IRequestHandler<GetStudentAnswersByExamQuery, Response<IEnumerable<StudentAnswerResponse>>>
     {
         private readonly IStudentAnswerService _studentAnswerService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public GetStudentAnswersByExamQueryHandler(IStudentAnswerService studentAnswerService)
+        public GetStudentAnswersByExamQueryHandler(IStudentAnswerService studentAnswerService, IUnitOfWork unitOfWork)
         {
             _studentAnswerService = studentAnswerService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Response<IEnumerable<StudentAnswerResponse>>> Handle(GetStudentAnswersByExamQuery request, CancellationToken cancellationToken)
@@ -19,6 +21,23 @@ namespace Project.Core.Features.StudentAnswers.Queries.Handlers
 
             if (!answers.Any())
                 return NotFound<IEnumerable<StudentAnswerResponse>>("No answers found for this exam");
+
+            // Create a dictionary of grader names for performance
+            var graderIds = answers.Where(a => !string.IsNullOrEmpty(a.GradedByUserId)).Select(a => a.GradedByUserId).Distinct().ToList();
+            var graders = new Dictionary<string, string>();
+            
+            if (graderIds.Any())
+            {
+                var graderUsers = await _unitOfWork.Users.GetTableNoTracking()
+                    .Where(u => graderIds.Contains(u.Id))
+                    .Select(u => new { u.Id, u.FirstName, u.LastName })
+                    .ToListAsync(cancellationToken);
+
+                graders = graderUsers.ToDictionary(
+                    g => g.Id,
+                    g => $"{g.FirstName} {g.LastName}".Trim()
+                );
+            }
 
             var result = answers.Select(sa => new StudentAnswerResponse
             {
@@ -33,6 +52,10 @@ namespace Project.Core.Features.StudentAnswers.Queries.Handlers
                 PointsEarned = sa.PointsEarned,
                 IsCorrect = sa.IsCorrect,
                 MaxScore = sa.Question?.Score ?? 0,
+                Feedback = sa.Feedback, // ??????? ??????
+                GradedByName = !string.IsNullOrEmpty(sa.GradedByUserId) && graders.ContainsKey(sa.GradedByUserId) 
+                    ? graders[sa.GradedByUserId] 
+                    : null, // ??? ??????
                 QuestionOptions = sa.Question?.Options?.Select(o => new OptionDto
                 {
                     Id = o.Id,

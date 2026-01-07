@@ -13,17 +13,19 @@ namespace Project.Core.Features.Exams.Queries.Results
 
     public class StudentAnswerSummary
     {
-        public int StudentAnswerId { get; set; } // ? ????? ???
+        public int StudentAnswerId { get; set; } // ???? ????? ??????
         public int QuestionId { get; set; }
         public string QuestionContent { get; set; } = null!;
         public string QuestionType { get; set; } = null!;
         public string AnswerType { get; set; } = null!;
         public int MaxScore { get; set; }
         public bool CorrectByAssistant { get; set; }
-        public int? PointsEarned { get; set; }
+        public decimal? PointsEarned { get; set; } // ???? ??????? ???????
         public bool IsCorrect { get; set; }
         public string? TextAnswer { get; set; }
         public string? ImageAnswerUrl { get; set; }
+        public string? Feedback { get; set; } // ??????? ??????
+        public string? GradedByName { get; set; } // ??? ??????
         public IEnumerable<SelectedOptionSummary> SelectedOptions { get; set; } = new List<SelectedOptionSummary>();
         public IEnumerable<QuestionOptionSummary> QuestionOptions { get; set; } = new List<QuestionOptionSummary>();
     }

@@ -13,8 +13,11 @@ namespace Project.Data.Entities.Exams
         public string? TextAnswer { get; set; } // For text answers
         public string? ImageAnswerUrl { get; set; } // For image answers
         
-        public int? PointsEarned { get; set; } // Points earned for this question
+        public decimal? PointsEarned { get; set; } // Points earned for this question (supports decimal)
         public bool IsCorrect { get; set; } = false; // Whether the answer is correct
+
+        public string? Feedback { get; set; } // ??????? ?????? ??? ???????
+        public string? GradedByUserId { get; set; } // ???? ???????? ???? ??? ???????
 
         // Navigation property for selected options (replaces JSON SelectedOptionIds)
         public ICollection<StudentAnswerOption> SelectedOptions { get; set; } = new List<StudentAnswerOption>();

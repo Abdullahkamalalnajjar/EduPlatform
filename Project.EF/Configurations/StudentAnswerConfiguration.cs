@@ -27,7 +27,11 @@ namespace Project.EF.Configurations
 
             builder.Property(x => x.TextAnswer).IsRequired(false);
             builder.Property(x => x.ImageAnswerUrl).IsRequired(false);
-            builder.Property(x => x.PointsEarned).IsRequired(false);
+            builder.Property(x => x.PointsEarned)
+                .HasColumnType("decimal(10,2)")
+                .IsRequired(false);
+            builder.Property(x => x.Feedback).IsRequired(false);
+            builder.Property(x => x.GradedByUserId).IsRequired(false);
         }
     }
 }

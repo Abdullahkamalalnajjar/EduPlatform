@@ -27,8 +27,8 @@ namespace Project.Core.Features.Courses.Queries.Handlers
                 EducationStageName = c.EducationStage.Name,
                 TeacherId = c.TeacherId,
                 EducationStageId = c.EducationStageId,
-                Price = c.Price,
-                DiscountedPrice = c.DiscountedPrice
+                Price = c.Price ?? 0,
+                DiscountedPrice = c.DiscountedPrice ?? 0
             }).ToList();
             return Success<IEnumerable<CourseResponse>>(result);
         }
@@ -44,8 +44,8 @@ namespace Project.Core.Features.Courses.Queries.Handlers
                 EducationStageName = course.EducationStage.Name,
                 TeacherId = course.TeacherId,
                 EducationStageId = course.EducationStageId,
-                Price = course.Price,
-                DiscountedPrice = course.DiscountedPrice
+                Price = course.Price ?? 0,
+                DiscountedPrice = course.DiscountedPrice ?? 0
             };
             return Success(resp);
         }

@@ -80,8 +80,8 @@ namespace Project.Service.Implementations
                             EducationStageName = c.EducationStage.Name,
                             TeacherId = c.TeacherId,
                             TeacherName = t.User.FullName,
-                            Price = c.Price,
-                            DiscountedPrice = c.DiscountedPrice,
+                            Price = c.Price ?? 0,
+                            DiscountedPrice = c.DiscountedPrice ?? 0,
                             Lectures = c.Lectures.Select(l => new LectureDto
                             {
                                 Id = l.Id,

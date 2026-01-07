@@ -1,24 +1,29 @@
 using Project.Core.Features.Exams.Commands.Models;
-using Project.Data.Entities.Exams;
-using Project.Service.Abstracts;
 
 namespace Project.Core.Features.Exams.Commands.Handlers
 {
     public class GradeExamCommandHandler : ResponseHandler, IRequestHandler<GradeExamCommand, Response<GradeExamResponse>>
     {
         private readonly IStudentExamResultService _resultService;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IStudentAnswerService _answerService;
         private readonly IUnitOfWork _unitOfWork;
 
-        public GradeExamCommandHandler(IStudentExamResultService resultService, IStudentAnswerService answerService, IUnitOfWork unitOfWork)
+        public GradeExamCommandHandler(IStudentExamResultService resultService,ICurrentUserService currentUserService, IStudentAnswerService answerService, IUnitOfWork unitOfWork)
         {
             _resultService = resultService;
+            _currentUserService = currentUserService;
             _answerService = answerService;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<Response<GradeExamResponse>> Handle(GradeExamCommand request, CancellationToken cancellationToken)
         {
+            // Get the current user (grader)
+            var graderId = _currentUserService.UserId;
+            if (string.IsNullOrEmpty(graderId))
+                return BadRequest<GradeExamResponse>("Unable to identify the grader");
+
             // Validate request
             if (request.StudentExamResultId <= 0)
                 return BadRequest<GradeExamResponse>("Invalid exam result ID");
@@ -29,12 +34,12 @@ namespace Project.Core.Features.Exams.Commands.Handlers
             // Get the exam result - use tracking to attach it for update
             var examResult = await _unitOfWork.StudentExamResults.GetTableAsTracking()
                 .FirstOrDefaultAsync(r => r.Id == request.StudentExamResultId, cancellationToken);
-            
+
             if (examResult is null)
                 return NotFound<GradeExamResponse>("Exam result not found");
 
             var previousTotalScore = examResult.TotalScore;
-            int additionalPoints = 0;
+            decimal additionalPoints = 0;
             var gradedCount = 0;
             var invalidAnswers = new List<string>();
 
@@ -60,7 +65,9 @@ namespace Project.Core.Features.Exams.Commands.Handlers
                 {
                     studentAnswer.PointsEarned = gradedAnswer.PointsEarned;
                     studentAnswer.IsCorrect = gradedAnswer.IsCorrect;
-                    
+                    studentAnswer.Feedback = gradedAnswer.Feedback; // ??? ?????????
+                    studentAnswer.GradedByUserId = graderId; // ????? ??????
+
                     await _answerService.UpdateAsync(studentAnswer, cancellationToken);
                     additionalPoints += gradedAnswer.PointsEarned;
                     gradedCount++;
@@ -72,9 +79,9 @@ namespace Project.Core.Features.Exams.Commands.Handlers
                 return BadRequest<GradeExamResponse>($"Failed to grade exam. Errors: {string.Join(", ", invalidAnswers)}");
 
             // Update the total score with the manually graded points
-            var newTotalScore = previousTotalScore + additionalPoints;
+            var newTotalScore = previousTotalScore + (int)additionalPoints;
             examResult.TotalScore = newTotalScore;
-            
+
             // Update using the unit of work directly since we already have the tracked entity
             _unitOfWork.StudentExamResults.Update(examResult);
             await _unitOfWork.CompeleteAsync();

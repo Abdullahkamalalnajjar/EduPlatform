@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Api.Base;
 using Project.Core.Features.Exams.Commands.Models;
@@ -79,6 +80,7 @@ namespace Project.Api.Controllers
             return NewResult(response);
         }
 
+        [Authorize]
         // Grade exam answers (for teacher/assistant)
         [HttpPost(Router.ExamRouting.Grade)]
         public async Task<IActionResult> GradeExam([FromBody] GradeExamCommand command)
