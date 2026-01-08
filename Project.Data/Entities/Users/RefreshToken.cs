@@ -13,5 +13,10 @@
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
+        // لتتبع جهاز المستخدم وضمان جلسة واحدة فقط
+        public string? DeviceId { get; set; } // معرّف فريد للجهاز (UUID أو معرّف من التطبيق)
+        public string? DeviceName { get; set; } // اسم الجهاز (Chrome على Windows، Safari على iPhone إلخ)
+        public string? IpAddress { get; set; } // عنوان IP للجهاز
+        public DateTime? LastActivityAt { get; set; } // آخر وقت نشاط على الجهاز
     }
 }

@@ -66,6 +66,7 @@ namespace Project.Service.Implementations
                         FacebookUrl = t.FacebookUrl,
                         TelegramUrl = t.TelegramUrl,
                         WhatsAppNumber = t.WhatsAppNumber,
+                        YouTubeUrl = t.YouTubeChannelUrl?? null,
                         PhotoUrl = t.PhotoUrl,
                         TeacherEducationStages = t.TeacherEducationStages.Select(tes => new TeacherEducationStageDto
                         {

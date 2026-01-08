@@ -18,6 +18,7 @@
         public string PhoneNumber { get; set; } = null!;
         public string FacebookUrl { get; set; } = null!;
         public string TelegramUrl { get; set; } = null!;
+        public string YouTubeUrl { get; set; } = null!;
         public string WhatsAppNumber { get; set; } = null!;
         public string? PhotoUrl { get; set; }
         public ICollection<CourseDto> Courses { get; set; } = new List<CourseDto>();

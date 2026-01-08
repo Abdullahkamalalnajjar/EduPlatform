@@ -55,6 +55,49 @@ namespace Project.Api.Controllers
             return NewResult(response);
         }
 
+        /// <summary>
+        /// عرض جميع الجلسات النشطة للمستخدم
+        /// Get all active sessions for a user
+        /// </summary>
+        [Authorize]
+        [HttpGet("active-sessions/{userId}")]
+        public async Task<IActionResult> GetActiveSessions(
+            string userId,
+            [FromQuery] string? currentDeviceId)
+        {
+            var request = new Project.Core.Features.Authentication.Queries.Models.GetActiveSessionsQuery
+            {
+                UserId = userId,
+                CurrentDeviceId = currentDeviceId
+            };
+
+            var response = await Mediator.Send(request);
+            return NewResult(response);
+        }
+
+        /// <summary>
+        /// تسجيل الخروج من جهاز معين
+        /// Logout from a specific device
+        /// </summary>
+        [Authorize]
+        [HttpPost("logout-device")]
+        public async Task<IActionResult> LogoutFromDevice([FromBody] Project.Core.Features.Authentication.Commands.Models.LogoutFromDeviceCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return NewResult(response);
+        }
+
+        /// <summary>
+        /// تسجيل الخروج من جميع الأجهزة
+        /// Logout from all devices
+        /// </summary>
+        [Authorize]
+        [HttpPost("logout-all-devices")]
+        public async Task<IActionResult> LogoutFromAllDevices([FromBody] Project.Core.Features.Authentication.Commands.Models.LogoutFromAllDevicesCommand command)
+        {
+            var response = await Mediator.Send(command);
+            return NewResult(response);
+        }
     }
 
 }

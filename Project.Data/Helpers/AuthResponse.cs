@@ -21,6 +21,8 @@
         string? WhatsAppNumber,
         string? PhotoUrl,
         // assistant teacher id (nullable for non-assistant users)
-        int? TeacherId
+        int? TeacherId,
+        // تنبيه المستخدم عند تسجيل الدخول من جهاز جديد
+        string? PreviousDeviceWarning = null // تحذير: تم تسجيل الخروج من الجهاز السابق
  );
 }

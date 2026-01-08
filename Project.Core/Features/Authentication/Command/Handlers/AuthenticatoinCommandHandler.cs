@@ -37,7 +37,14 @@ namespace Project.Core.Features.Authentication.Command.Handlers
 
         public async Task<Response<AuthResponse>> Handle(SignInCommand request, CancellationToken cancellationToken)
         {
-            var result = await _authService.GetTokenAsync(request.Email, request.Password, cancellationToken);
+            var ipAddress = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString() ?? "0.0.0.0";
+            var result = await _authService.GetTokenAsync(
+                request.Email, 
+                request.Password, 
+                request.DeviceId,
+                request.DeviceName,
+                ipAddress,
+                cancellationToken);
 
             if (!string.IsNullOrEmpty(result.ErrorMessage))
             {
@@ -216,7 +223,7 @@ namespace Project.Core.Features.Authentication.Command.Handlers
                 await _unitOfWork.CompeleteAsync();
                 await transaction.CommitAsync();
 
-                var tokenResult = await _authService.GetTokenAsync(request.Email, request.Password, cancellationToken);
+                var tokenResult = await _authService.GetTokenAsync(request.Email, request.Password, deviceId: null, deviceName: null, ipAddress: null, cancellationToken);
                 if (!string.IsNullOrEmpty(tokenResult.ErrorMessage))
                 {
                     return Success<AuthResponse>(null!, "Account created but automatic login failed: " + tokenResult.ErrorMessage);

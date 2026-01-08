@@ -10,9 +10,10 @@ namespace Project.Service.Implementations
         private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
         private readonly IJwtProvider _jwtProvider = jwtProvider;
         private readonly int _tokenExpiresIn = 14; // 14 days
-        public async Task<AuthResult> GetTokenAsync(string email, string password, CancellationToken cancellationToken = default)
+        
+        public async Task<AuthResult> GetTokenAsync(string email, string password, string? deviceId = null, string? deviceName = null, string? ipAddress = null, CancellationToken cancellationToken = default)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.Users.Include(u => u.RefreshTokens).FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
             if (user is null)
                 return AuthResult.Fail("Incorrect email or password. Please try again.");
 
@@ -38,10 +39,35 @@ namespace Project.Service.Implementations
             var refreshToken = GeneratedRefreshToken();
             var refreshTokenExpiresIn = now.AddDays(_tokenExpiresIn);
 
+            // Use provided device info or defaults
+            deviceId ??= Guid.NewGuid().ToString();
+            deviceName ??= "Unknown Device";
+            ipAddress ??= "0.0.0.0";
+
+            // Apply single-device login restriction only for students
+            if (userRoles.Contains("Student"))
+            {
+                // Check if student has active sessions on other devices
+                var hasActiveTokens = user.RefreshTokens.Any(t => t.IsActive);
+                if (hasActiveTokens)
+                {
+                    var previousDeviceName = user.RefreshTokens
+                        .Where(t => t.IsActive)
+                        .OrderByDescending(t => t.LastActivityAt)
+                        .FirstOrDefault()?.DeviceName ?? "Unknown Device";
+                    
+                    return AuthResult.Fail($"⚠️ هذا الحساب ملك لشخص آخر - يتم استخدامه حالياً على الجهاز: {previousDeviceName}\nيرجى تسجيل الخروج من الجهاز الآخر أولاً");
+                }
+            }
+
             user.RefreshTokens.Add(new RefreshToken
             {
                 Token = refreshToken,
                 ExpiresOn = refreshTokenExpiresIn,
+                DeviceId = deviceId,
+                DeviceName = deviceName,
+                IpAddress = ipAddress,
+                LastActivityAt = now
             });
 
             await _userManager.UpdateAsync(user);
@@ -109,8 +135,8 @@ namespace Project.Service.Implementations
             // make the refresh token revoke
             refreshTokenEntity.RevokedOn = DateTime.UtcNow;
             // Generate the new token
-            var (userRoles, userPerimission) = await GetUserRolesAndPermissions(user, cancellationToken);
-            var (newToken, expiresIn) = _jwtProvider.GenerateToken(user, userPerimission, userPerimission);
+            var (userRoles, userPermissions) = await GetUserRolesAndPermissions(user, cancellationToken);
+            var (newToken, expiresIn) = _jwtProvider.GenerateToken(user, userRoles, userPermissions);
             // Generate the new refresh token
             var newRefreshToken = GeneratedRefreshToken();
             var newRefreshTokenExpiresIn = DateTime.UtcNow.AddDays(_tokenExpiresIn);
@@ -119,6 +145,10 @@ namespace Project.Service.Implementations
             {
                 Token = newRefreshToken,
                 ExpiresOn = newRefreshTokenExpiresIn,
+                DeviceId = refreshTokenEntity.DeviceId,
+                DeviceName = refreshTokenEntity.DeviceName,
+                IpAddress = refreshTokenEntity.IpAddress,
+                LastActivityAt = DateTime.UtcNow,
             });
             // update the user
             await _userManager.UpdateAsync(user);
